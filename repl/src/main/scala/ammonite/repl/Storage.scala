@@ -2,13 +2,13 @@ package ammonite.repl
 
 import acyclic.file
 import ammonite.ops._
-import ammonite.repl.Util.{IvyMap, ClassFiles, CompileCache}
+import ammonite.repl.Util.{CacheDetails, ClassFiles, CompileCache, IvyMap}
 import ammonite.repl.ImportData
 import org.apache.ivy.plugins.resolver.RepositoryResolver
 
 import scala.util.Try
 import scala.collection.generic.CanBuildFrom
-import scala.collection.{mutable, IndexedSeqLike}
+import scala.collection.{IndexedSeqLike, mutable}
 
 
 /**
@@ -81,7 +81,7 @@ object Storage{
 
     def compileCacheSave(path: String, tag: String, data: CompileCache): Unit = {
       val (classFiles, imports) = data
-      val tagCacheDir = compileCacheDir/path
+      val tagCacheDir = compileCacheDir/path.replace("/", "$div").replace(":", "$colon")
       if(!exists(tagCacheDir)){
         mkdir(tagCacheDir)
         val metadata = upickle.default.write((tag, imports), indent = 4)
@@ -92,11 +92,11 @@ object Storage{
       }
     }
 
-    def classFilesListSave(pkg: String,
-                           wrapper: String,
-                           dataList: List[(String, String)],
+    def classFilesListSave(pkg: Seq[Name],
+                           wrapper: Name,
+                           dataList: List[CacheDetails],
                            tag: String): Unit = {
-      val dir = pkg + "." + wrapper + "0"
+      val dir = (pkg :+ wrapper).map(_.encoded).mkString(".") + "0"
       val codeCacheDir = compileCacheDir/dir
       if(!exists(codeCacheDir)) {
         mkdir(codeCacheDir)
@@ -105,10 +105,10 @@ object Storage{
       }
     }
 
-    def classFilesListLoad(pkg: String,
-                           wrapper: String,
+    def classFilesListLoad(pkg: Seq[Name],
+                           wrapper: Name,
                            cacheTag: String): Seq[CompileCache] = {
-      val dir = pkg + "." + wrapper + "0"
+      val dir = (pkg :+ wrapper).map(_.encoded).mkString(".") + "0"
       val codeCacheDir = compileCacheDir/dir
       if(!exists(codeCacheDir)) Seq[CompileCache]()
       else {
@@ -116,10 +116,13 @@ object Storage{
           read(codeCacheDir/classFilesOrder)
         }.toOption
         val (loadedTag, classFilesList) =
-          upickle.default.read[(String, Seq[(String, String)])](metadataJson.getOrElse(""))
+          upickle.default.read[(String, Seq[CacheDetails])](metadataJson.getOrElse(""))
         if (cacheTag == loadedTag){
           val res = {
-            for(cachedPkg <- classFilesList) yield compileCacheLoad(cachedPkg._1, cachedPkg._2)
+            for(cachedPkg <- classFilesList) yield {
+              compileCacheLoad(cachedPkg._1.map(_.encoded).mkString("."), cachedPkg._2)
+            }
+
           }.flatten
           res
         }
@@ -128,7 +131,7 @@ object Storage{
     }
 
     def compileCacheLoad(path: String, tag: String): Option[CompileCache] = {
-      val tagCacheDir = compileCacheDir/path
+      val tagCacheDir = compileCacheDir/path.replace("/", "$div").replace(":", "$colon")
       if(!exists(tagCacheDir)) None
       else for{
         metadataJson <- Try{read(tagCacheDir/metadataFile)}.toOption

@@ -1,5 +1,5 @@
 package ammonite.repl.interp
-import ammonite.repl.tools.{IvyThing, Resolvers, Resolver}
+import ammonite.repl.tools.{IvyThing, Resolver, Resolvers}
 import java.io.File
 import java.nio.file.NotDirectoryException
 import org.apache.ivy.plugins.resolver.RepositoryResolver
@@ -10,6 +10,7 @@ import scala.tools.nsc.Settings
 import acyclic.file
 import fastparse.all._
 import ammonite.ops._
+import ammonite.repl.Parsers.ImportTree
 import pprint.{Config, PPrint}
 import annotation.tailrec
 import ammonite.repl._
@@ -33,9 +34,10 @@ class Interpreter(prompt0: Ref[String],
                   storage: Storage,
                   history: => History,
                   predef: String,
-                  wd: Path,
+                  val wd: Path,
                   replArgs: Seq[Bind[_]],
-                  withCompiler: Boolean = true){ interp =>
+                  withCompiler: Boolean = true)
+  extends ImportHook.InterpreterInterface{ interp =>
 
   val hardcodedPredef =
     "import ammonite.repl.frontend.ReplBridge.repl.{pprintConfig, derefPPrint}"
@@ -110,10 +112,10 @@ class Interpreter(prompt0: Ref[String],
   }.mkString("\n")
 
   val predefs = Seq(
-    (hardcodedPredef, "HardcodedPredef", "ammonite.predef"),
-    (predef, "Predef", "ammonite.predef"),
-    (storage.loadPredef, "LoadedPredef", "ammonite.predef"),
-    (argString, "ArgsPredef", "ammonite.predef")
+    (hardcodedPredef, Name("HardcodedPredef")),
+    (predef, Name("Predef")),
+    (storage.loadPredef, Name("LoadedPredef")),
+    (argString, Name("ArgsPredef"))
   )
 
   // Use a var and a for-loop instead of a fold, because when running
@@ -121,10 +123,12 @@ class Interpreter(prompt0: Ref[String],
   // on `predefImports`, and we should be able to provide the "current" imports
   // to it even if it's half built
   var predefImports = Imports(Nil)
-  for( (sourceCode, wrapperName, pkgName) <- predefs) {
+  for( (sourceCode, wrapperName) <- predefs) {
+    val pkgName = Seq(Name("ammonite"), Name("predef"))
     // If withCompiler flag is false load predefs from cache without using compiler
     withCompiler match {
       case true =>
+
         processModule0(sourceCode, wrapperName, pkgName, predefImports) match {
           case Res.Success(data) =>
             predefImports = predefImports ++ data._1
@@ -136,11 +140,12 @@ class Interpreter(prompt0: Ref[String],
 
           case Res.Exception(ex, msg) =>
             throw new RuntimeException("Error during Predef: " + msg, ex)
+
         }
       case false =>
         val emptyCachedData = (Traversable[(String, Array[Byte])](), Imports(Seq()))
         val folderStorage = storage.asInstanceOf[Storage.Folder]
-        val loc = pkgName + "." + wrapperName
+        val loc = (pkgName :+ wrapperName).map(_.encoded).mkString(".")
         val d = folderStorage.compileCacheLoad(loc, "predef").getOrElse(emptyCachedData)
         predefImports = predefImports ++ d._2
     }
@@ -151,6 +156,42 @@ class Interpreter(prompt0: Ref[String],
     if(withCompiler) init()
   Timer("Interpreter init predef 1")
 
+  val importHooks = Ref(Map[String, ImportHook](
+    "script" -> ImportHook.File,
+    "url" -> ImportHook.Http,
+    "ivy" -> ImportHook.Ivy
+  ))
+
+  def resolveImportHooks(stmts: Seq[String]): Res[_] = {
+    val importTrees =
+      stmts.map(Parsers.ImportSplitter.parse(_))
+           .collect{case Parsed.Success(v, _) => v }
+           .flatten
+           .filter(_.prefix(0)(0) == '$')
+
+    def resolve(importTrees: Seq[ImportTree]): Res[_] = importTrees match{
+      case Nil => Res.Success(())
+      case Seq(tree, rest @ _*) =>
+        importHooks().get(tree.prefix.head.stripPrefix("$")) match{
+          case None => resolve(importTrees.tail)
+          case Some(hook) =>
+            for{
+              hooked <- hook.handle(tree.copy(prefix = tree.prefix.drop(1)), this)
+              hookResults <- Res.map(hooked){
+                case res: ImportHook.Result.Source =>
+                  processModule(res.code, res.wrapper, res.pkg)
+                case res: ImportHook.Result.Jar =>
+                  eval.sess.frames.head.addClasspath(Seq(res.file.toIO))
+                  evalClassloader.add(res.file.toIO.toURI.toURL)
+                  init()
+                  Res.Success(())
+              }
+            } yield hookResults
+        }
+
+    }
+    resolve(importTrees)
+  }
 
   def processLine(code: String,
                   stmts: Seq[String],
@@ -161,18 +202,21 @@ class Interpreter(prompt0: Ref[String],
     _ <- Catching { case ex =>
       Res.Exception(ex, "Something unexpected went wrong =(")
     }
+
+    _ <- resolveImportHooks(stmts)
+
     processed <- preprocess.transform(
       stmts,
       eval.getCurrentLine,
       "",
-      "ammonite.session",
-      "cmd" + eval.getCurrentLine,
+      Seq(Name("$sess")),
+      Name("cmd" + eval.getCurrentLine),
       eval.sess.frames.head.imports,
       prints => s"ammonite.repl.frontend.ReplBridge.repl.Internal.combinePrints($prints)"
     )
     out <- evaluateLine(
       processed, printer,
-      fileName, "cmd" + eval.getCurrentLine
+      fileName, Name("cmd" + eval.getCurrentLine)
     )
   } yield out
   resV.map(_._1)
@@ -209,7 +253,7 @@ class Interpreter(prompt0: Ref[String],
   def evaluateLine(processed: Preprocessor.Output,
                    printer: Printer,
                    fileName: String,
-                   indexedWrapperName: String): Res[(Evaluated, String)] = for{
+                   indexedWrapperName: Name): Res[(Evaluated, String)] = for{
       _ <- Catching{ case e: ThreadDeath => Evaluator.interrupted(e) }
       (classFiles, newImports) <- compileClass(
         processed,
@@ -232,9 +276,9 @@ class Interpreter(prompt0: Ref[String],
 
   def processScriptBlock(processed: Preprocessor.Output,
                          printer: Printer,
-                         wrapperName: String,
+                         wrapperName: Name,
                          fileName: String,
-                         pkgName: String) = for {
+                         pkgName: Seq[Name]) = for {
       (cls, newImports, tag) <- cachedCompileBlock(
         processed,
         printer,
@@ -248,14 +292,14 @@ class Interpreter(prompt0: Ref[String],
 
   def cachedCompileBlock(processed: Preprocessor.Output,
                          printer: Printer,
-                         wrapperName: String,
+                         wrapperName: Name,
                          fileName: String,
-                         pkgName: String,
+                         pkgName: Seq[Name],
                          printCode: String): Res[(Class[_], Imports, String)] = {
 
     Timer("cachedCompileBlock 1")
 
-    val fullyQualifiedName = pkgName + "." + wrapperName
+    val fullyQualifiedName = (pkgName :+ wrapperName).map(_.encoded).mkString(".")
     val tag = Interpreter.cacheTag(
       processed.code, Nil, eval.sess.frames.head.classloader.classpathHash
     )
@@ -284,16 +328,16 @@ class Interpreter(prompt0: Ref[String],
     x
   }
 
-  def processModule(code: String, wrapperName: String, pkgName: String) = {
+  def processModule(code: String, wrapperName: Name, pkgName: Seq[Name]) = {
     processModule0(code, wrapperName, pkgName, predefImports)
   }
 
-
   def processModule0(code: String,
-                     wrapperName: String,
-                     pkgName: String,
+                     wrapperName: Name,
+                     pkgName: Seq[Name],
                      startingImports: Imports): Res[(Imports, List[CacheDetails])] = for{
     blocks <- Preprocessor.splitScript(Interpreter.skipSheBangLine(code))
+    _ <- resolveImportHooks(blocks.flatMap(_._2))
     res <- processCorrectScript(
       blocks,
       startingImports,
@@ -304,7 +348,7 @@ class Interpreter(prompt0: Ref[String],
           processScriptBlock(
             processed, printer,
             Interpreter.indexWrapperName(wrapperName, wrapperIndex),
-            wrapperName + ".scala", pkgName
+            wrapperName.raw + ".scala", pkgName
           )
         )
     )
@@ -316,8 +360,8 @@ class Interpreter(prompt0: Ref[String],
       res <- processCorrectScript(
         blocks,
         eval.sess.frames.head.imports,
-        "ammonite.session",
-        "cmd" + eval.getCurrentLine,
+        Seq(Name("$sess")),
+        Name("cmd" + eval.getCurrentLine),
         { (processed, wrapperIndex, indexedWrapperName) =>
           evaluateLine(
             processed,
@@ -332,11 +376,10 @@ class Interpreter(prompt0: Ref[String],
   }
 
 
-
   def processCorrectScript(blocks: Seq[(String, Seq[String])],
                            startingImports: Imports,
-                           pkgName: String,
-                           wrapperName: String,
+                           pkgName: Seq[Name],
+                           wrapperName: Name,
                            evaluate: Interpreter.EvaluateCallback,
                            preprocess: Preprocessor = Preprocessor(compiler.parse))
                           : Res[(Imports, List[CacheDetails])] = {
@@ -409,7 +452,7 @@ class Interpreter(prompt0: Ref[String],
     }
     // wrapperIndex starts off as 1, so that consecutive wrappers can be named
     // Wrapper, Wrapper2, Wrapper3, Wrapper4, ...
-    try loop(blocks, startingImports, Imports(Nil), wrapperIndex = 1, List[(String, String)]())
+    try loop(blocks, startingImports, Imports(Nil), wrapperIndex = 1, List[CacheDetails]())
     finally scriptImportCallback = outerScriptImportCallback
   }
 
@@ -422,7 +465,25 @@ class Interpreter(prompt0: Ref[String],
       case Res.Exception(ex, msg) => lastException = ex
     }
   }
+  def loadIvy(coordinates: (String, String, String), verbose: Boolean = true) = {
+    val (groupId, artifactId, version) = coordinates
+    val psOpt =
+      storage.ivyCache()
+        .get((replApi.resolvers.hashCode.toString, groupId, artifactId, version))
+        .map(_.map(new java.io.File(_)))
+        .filter(_.forall(_.exists()))
 
+    psOpt match{
+      case Some(ps) => ps
+      case None =>
+        IvyThing(() => replApi.resolvers()).resolveArtifact(
+          groupId,
+          artifactId,
+          version,
+          if (verbose) 2 else 1
+        ).toSet
+    }
+  }
   abstract class DefaultLoadJar extends LoadJar with Resolvers {
     
     lazy val ivyThing = IvyThing(() => resolvers)
@@ -434,30 +495,15 @@ class Interpreter(prompt0: Ref[String],
       init()
     }
     def ivy(coordinates: (String, String, String), verbose: Boolean = true): Unit = {
+      val resolved = loadIvy(coordinates, verbose)
       val (groupId, artifactId, version) = coordinates
-      val psOpt =
-        storage.ivyCache()
-                 .get((resolvers.hashCode.toString, groupId, artifactId, version))
-                 .map(_.map(new java.io.File(_)))
-                 .filter(_.forall(_.exists()))
+      storage.ivyCache() = storage.ivyCache().updated(
+        (resolvers.hashCode.toString, groupId, artifactId, version),
+        resolved.map(_.getAbsolutePath)
+      )
 
-      psOpt match{
-        case Some(ps) => ps.foreach(handleClasspath)
-        case None =>
-          val resolved = ivyThing.resolveArtifact(
-            groupId,
-            artifactId,
-            version,
-            if (verbose) 2 else 1
-          )
+      resolved.foreach(handleClasspath)
 
-          storage.ivyCache() = storage.ivyCache().updated(
-            (resolvers.hashCode.toString, groupId, artifactId, version),
-            resolved.map(_.getAbsolutePath).toSet
-          )
-
-          resolved.foreach(handleClasspath)
-      }
 
       init()
     }
@@ -502,7 +548,7 @@ class Interpreter(prompt0: Ref[String],
           case Res.Success(data) =>
             if(scriptCaching) {
               val files = for (d <- data._2) yield (d._1, d._2)
-              storage.asInstanceOf[Storage.Folder]classFilesListSave(pkg, wrapper, files, cacheTag)
+              storage.asInstanceOf[Storage.Folder].classFilesListSave(pkg, wrapper, files, cacheTag)
             }
         }
         init()
@@ -661,10 +707,10 @@ object Interpreter{
       code
   }
 
-  type EvaluateCallback = (Preprocessor.Output, Int, String) => Res[(Evaluated, String)]
+  type EvaluateCallback = (Preprocessor.Output, Int, Name) => Res[(Evaluated, String)]
 
-  def indexWrapperName(wrapperName: String, wrapperIndex: Int) = {
-    wrapperName + (if (wrapperIndex == 1) "" else "_" + wrapperIndex)
+  def indexWrapperName(wrapperName: Name, wrapperIndex: Int): Name = {
+    Name(wrapperName.raw + (if (wrapperIndex == 1) "" else "_" + wrapperIndex))
   }
 
 
