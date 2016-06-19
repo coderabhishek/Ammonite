@@ -90,8 +90,10 @@ case class Main(predef: String = "",
     val cacheTag = "cache" + Util.md5Hash(Iterator(code.getBytes)).map("%02x".format(_)).mkString
     // check if script takes args or loads code as they will need compiler
     storage match {
-      case s: Storage.InMemory => runScript(path, args, kwargs, storage, cacheTag, false)
+      case s: Storage.InMemory =>
+        runScript(path, args, kwargs, storage, cacheTag, false)
       case _ =>
+
         if (args == Seq() || !code.contains("load(")) {
           storage.asInstanceOf[Storage.Folder].classFilesListLoad(pkg, wrapper, cacheTag) match {
             case Seq() =>
@@ -140,8 +142,13 @@ case class Main(predef: String = "",
               // blockNumber keeps track of blockIndex
               cachedData.foreach { d =>
                 for {
-                  cls <- interp.eval.loadClass(pkg + "." + wrapper + getBlockNumber, d._1)
-                } yield evalMain(cls)
+                  cls <- interp.eval.loadClass(
+                    pkg.map(_.encoded).mkString(".") + "." + wrapper.encoded + getBlockNumber,
+                    d._1
+                  )
+                } yield {
+                  evalMain(cls)
+                }
                 blockNumber += 1
               }
 
