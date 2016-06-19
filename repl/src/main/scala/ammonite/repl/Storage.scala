@@ -116,10 +116,13 @@ object Storage{
           read(codeCacheDir/classFilesOrder)
         }.toOption
         val (loadedTag, classFilesList) =
-          upickle.default.read[(String, Seq[(String, String)])](metadataJson.getOrElse(""))
+          upickle.default.read[(String, Seq[CacheDetails])](metadataJson.getOrElse(""))
         if (cacheTag == loadedTag){
           val res = {
-            for(cachedPkg <- classFilesList) yield compileCacheLoad(cachedPkg._1, cachedPkg._2)
+            for(cachedPkg <- classFilesList) yield {
+              compileCacheLoad(cachedPkg._1.map(_.encoded).mkString("."), cachedPkg._2)
+            }
+
           }.flatten
           res
         }
