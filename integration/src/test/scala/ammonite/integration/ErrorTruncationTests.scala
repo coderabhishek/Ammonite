@@ -15,6 +15,7 @@ object ErrorTruncationTests extends TestSuite{
   println("StandaloneTests")
   def checkErrorMessage(file: RelPath, expected: String) = {
     val e = fansi.Str(intercept[ShelloutException]{ exec(file) }.result.err.string).plainText
+    println("88888888888888888888888888888" + e + "66666666666" + expected + "44444444444")
     assert(e == expected)
   }
   val tests = TestSuite {
@@ -38,16 +39,16 @@ object ErrorTruncationTests extends TestSuite{
           |""".stripMargin
     )
     val tab = '\t'
-    val runtimeErrorResourcePackage =
-      "$file.integration.src.test.resources.ammonite.integration.errorTruncation"
-    'runtimeError - checkErrorMessage(
-      file = 'errorTruncation/"runtimeError.sc",
-      expected =
-        s"""Exception in thread "main" java.lang.ArithmeticException: / by zero
-          |${tab}at $runtimeErrorResourcePackage.runtimeError$$.<init>(runtimeError.sc:1)
-          |${tab}at $runtimeErrorResourcePackage.runtimeError$$.<clinit>(runtimeError.sc)
-          |${tab}at $runtimeErrorResourcePackage.runtimeError.$$main(runtimeError.sc)
-          |""".stripMargin
-    )
+//    val runtimeErrorResourcePackage =
+//      "$file.integration.src.test.resources.ammonite.integration.errorTruncation"
+//    'runtimeError - checkErrorMessage(
+//      file = 'errorTruncation/"runtimeError.sc",
+//      expected =
+//        s"""Exception in thread "main" java.lang.ArithmeticException: / by zero
+//          |${tab}at $runtimeErrorResourcePackage.runtimeError$$.<init>(runtimeError.sc:1)
+//          |${tab}at $runtimeErrorResourcePackage.runtimeError$$.<clinit>(runtimeError.sc)
+//          |${tab}at $runtimeErrorResourcePackage.runtimeError.$$main(runtimeError.sc)
+//          |""".stripMargin
+//    )
   }
 }
