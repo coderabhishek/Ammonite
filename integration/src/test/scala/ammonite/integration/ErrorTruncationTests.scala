@@ -14,7 +14,7 @@ object ErrorTruncationTests extends TestSuite{
   override def utestTruncateLength = 60000
   println("StandaloneTests")
   def checkErrorMessage(file: RelPath, expected: String) = {
-    val e = fansi.Str(intercept[ShelloutException]{ exec(file) }.result.err.string).plainText
+    val e = intercept[ShelloutException]{ exec(file) }.result.err.string
     println("8888888888" + e + "6666666666" + expected + "4444444444")
     assert(e == expected)
   }
