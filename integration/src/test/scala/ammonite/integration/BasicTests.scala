@@ -26,6 +26,7 @@ object BasicTests extends TestSuite{
 
     'complex{
       val evaled = exec('basic/"Complex.sc")
+      println("44444444444444" + evaled.out.trim + "4444")
       assert(evaled.out.trim.contains("Spire Interval [0, 10]"))
     }
 

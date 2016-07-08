@@ -3,8 +3,8 @@ println("Hello!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
 @
 
-println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA^%%^%^%^%^")
+println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA^%%^%^%^%^  ")
 //import spire.implicits._
-//import spire.math._
+import spire.math._
 //
-//println("Spire Interval " + Interval(0, 10))
+println("Spire Interval " + Interval(0, 10))
