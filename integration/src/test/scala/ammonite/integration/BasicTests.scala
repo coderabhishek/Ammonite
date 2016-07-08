@@ -31,20 +31,20 @@ object BasicTests extends TestSuite{
 
 
 
-//    'shell{
-//      // make sure you can load the example-predef.sc, have it pull stuff in
-//      // from ivy, and make use of `cd!` and `wd` inside the executed script.
-//      val res = %%bash(
-//        executable,
-//        "--predef-file",
-//        exampleBarePredef,
-//        "-c",
-//        """val x = wd
-//          |@
-//          |cd! 'amm/'src
-//          |@
-//          |println(wd relativeTo x)""".stripMargin
-//      )
+    'shell{
+      // make sure you can load the example-predef.sc, have it pull stuff in
+      // from ivy, and make use of `cd!` and `wd` inside the executed script.
+      val res = %%bash(
+        executable,
+        "--predef-file",
+        exampleBarePredef,
+        "-c",
+        """val x = wd
+          |@
+          |cd! 'amm/'src
+          |@
+          |println(wd relativeTo x)""".stripMargin
+      )
 //
 //
 //      val output = res.out.trim
