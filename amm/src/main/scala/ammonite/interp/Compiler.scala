@@ -293,7 +293,6 @@ object Compiler{
         files ++ subs.map(_.asInstanceOf[VirtualDirectory]).flatMap(enumerateVdFiles)
       }
 
-      println("((((((((((((((((((((((((((((((((((((((((((((((")
 
       compiler.reporter.reset()
       this.errorLogger = printer.error
