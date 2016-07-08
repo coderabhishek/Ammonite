@@ -560,7 +560,7 @@ class Interpreter(prompt0: Ref[String],
   def loadIvy(coordinates: (String, String, String), verbose: Boolean = true) = timer{
     val (groupId, artifactId, version) = coordinates
     val cacheKey = (replApi.resolvers().hashCode.toString, groupId, artifactId, version)
-    pritln("000000000000000000000000" + cacheKey + "00000000000000000")
+    println("000000000000000000000000" + cacheKey + "00000000000000000")
     val fetched =
       storage.ivyCache()
         .get(cacheKey)
