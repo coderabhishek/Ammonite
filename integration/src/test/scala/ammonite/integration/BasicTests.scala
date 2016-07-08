@@ -31,40 +31,45 @@ object BasicTests extends TestSuite{
     //http://stackoverflow.com/questions/15487301/configure-apache-ant-and-ivy-on-windows-7
     'linuxOnlyTests {
 
-      if (!windowsPlatform) {
-        'complex {
+      'complex {
+        if (!windowsPlatform) {
           val evaled = exec('basic / "Complex.sc")
           println("44444444444444" + evaled.out.trim + "4444")
           assert(evaled.out.trim.contains("Spire Interval [0, 10]"))
         }
+      }
 
-        'shell {
-          // make sure you can load the example-predef.sc, have it pull stuff in
-          // from ivy, and make use of `cd!` and `wd` inside the executed script.
+      'shell {
+        // make sure you can load the example-predef.sc, have it pull stuff in
+        // from ivy, and make use of `cd!` and `wd` inside the executed script.
+        if (!windowsPlatform) {
           val res = %% bash(
             executable,
             "--predef-file",
             exampleBarePredef,
             "-c",
             """val x = wd
-              |@
-              |cd! 'amm/'src
-              |@
-              |println(wd relativeTo x)""".stripMargin
-            )
+            |@
+            |cd! 'amm/'src
+            |@
+            |println(wd relativeTo x)""".stripMargin
+          )
 
           val output = res.out.trim
           assert(output == "amm/src")
         }
+      }
 
-        'classloaders{
-          val evaled = exec('basic/ "Resources.sc")
+      'classloaders{
+        if (!windowsPlatform) {
+          val evaled = exec('basic / "Resources.sc")
           assert(evaled.out.string.contains("1745"))
         }
+      }
 
-        'playframework- {
-          if
-          (scalaVersion.startsWith("2.11.") && javaVersion.startsWith("1.8.")){
+      'playframework- {
+        if (!windowsPlatform) {
+          if (scalaVersion.startsWith("2.11.") && javaVersion.startsWith("1.8.")){
             val evaled = exec('basic/"PlayFramework.sc")
             assert(evaled.out.string.contains("Hello bar"))
           }
