@@ -5,6 +5,6 @@ println("Hello!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
 
 println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA^%%^%^%^%^  ")
 //import spire.implicits._
-import spire.math._
+import scala._
 //
-println("Spire Interval " + Interval(0, 10))
+println("Spire Interval " )
