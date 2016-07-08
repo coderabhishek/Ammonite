@@ -599,6 +599,8 @@ class Interpreter(prompt0: Ref[String],
       reInit()
     }
     def ivy(coordinates: (String, String, String), verbose: Boolean = true): Unit = {
+
+      println("&&&&&&&&&&&&&&&&&&&&&&&&&&&" + coordinates + "&&&&&&&&&&&&&&&")
       val resolved = loadIvy(coordinates, verbose)
       val (groupId, artifactId, version) = coordinates
 
