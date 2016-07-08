@@ -45,11 +45,11 @@ object BasicTests extends TestSuite{
           |@
           |println(wd relativeTo x)""".stripMargin
       )
-//
-//
-//      val output = res.out.trim
-//      assert(output == "amm/src")
-//    }
+
+
+      val output = res.out.trim
+      assert(output == "amm/src")
+    }
     'main{
       val evaled = exec('basic/"Main.sc")
       val out = evaled.out.string
