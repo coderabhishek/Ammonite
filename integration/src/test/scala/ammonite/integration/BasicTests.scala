@@ -24,47 +24,47 @@ object BasicTests extends TestSuite{
       assert(evaled.out.trim == "Hello World")
     }
 
-    'complex{
-      val evaled = exec('basic/"Complex.sc")
-      assert(evaled.out.trim.contains("Spire Interval [0, 10]"))
-    }
+//    'complex{
+//      val evaled = exec('basic/"Complex.sc")
+//      assert(evaled.out.trim.contains("Spire Interval [0, 10]"))
+//    }
 
 
 
-    'shell{
-      // make sure you can load the example-predef.sc, have it pull stuff in
-      // from ivy, and make use of `cd!` and `wd` inside the executed script.
-      val res = %%bash(
-        executable,
-        "--predef-file",
-        exampleBarePredef,
-        "-c",
-        """val x = wd
-          |@
-          |cd! 'amm/'src
-          |@
-          |println(wd relativeTo x)""".stripMargin
-      )
-
-
-      val output = res.out.trim
-      assert(output == "amm/src")
-    }
+//    'shell{
+//      // make sure you can load the example-predef.sc, have it pull stuff in
+//      // from ivy, and make use of `cd!` and `wd` inside the executed script.
+//      val res = %%bash(
+//        executable,
+//        "--predef-file",
+//        exampleBarePredef,
+//        "-c",
+//        """val x = wd
+//          |@
+//          |cd! 'amm/'src
+//          |@
+//          |println(wd relativeTo x)""".stripMargin
+//      )
+//
+//
+//      val output = res.out.trim
+//      assert(output == "amm/src")
+//    }
     'main{
       val evaled = exec('basic/"Main.sc")
       val out = evaled.out.string
       assert(out.contains("Hello! 1"))
     }
-    'classloaders{
-      val evaled = exec('basic/"Resources.sc")
-      assert(evaled.out.string.contains("1745"))
-    }
-    'playframework- {
-      if (scalaVersion.startsWith("2.11.") && javaVersion.startsWith("1.8.")){
-        val evaled = exec('basic/"PlayFramework.sc")
-        assert(evaled.out.string.contains("Hello bar"))
-      }
-    }
+//    'classloaders{
+//      val evaled = exec('basic/"Resources.sc")
+//      assert(evaled.out.string.contains("1745"))
+//    }
+//    'playframework- {
+//      if (scalaVersion.startsWith("2.11.") && javaVersion.startsWith("1.8.")){
+//        val evaled = exec('basic/"PlayFramework.sc")
+//        assert(evaled.out.string.contains("Hello bar"))
+//      }
+//    }
     'args{
       'full{
         val evaled = exec('basic/"Args.sc", "3", "Moo", (cwd/'omg/'moo).toString)
