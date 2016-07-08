@@ -14,8 +14,7 @@ object ErrorTruncationTests extends TestSuite{
   override def utestTruncateLength = 60000
   println("StandaloneTests")
   def checkErrorMessage(file: RelPath, expected: String) = {
-    val e = intercept[ShelloutException]{ exec(file) }.result.err.string
-    println("88888888888888888888888888888" + e + "66666666666" + expected + "44444444444")
+    val e = fansi.Str(intercept[ShelloutException]{ exec(file) }.result.err.string).plainText.replace("\r", "").replace("\n", System.lineSeparator())
     assert(e == expected)
   }
   val tests = TestSuite {
@@ -30,25 +29,25 @@ object ErrorTruncationTests extends TestSuite{
           |""".stripMargin.replace("\n", System.lineSeparator())
     )
 
-//    'parseError - checkErrorMessage(
-//      file = 'errorTruncation/"parseError.sc",
-//      expected =
-//        """Syntax Error: End:1:1 ..."}\n"
-//          |}
-//          |^
-//          |""".stripMargin
-//    )
-//    val tab = '\t'
-//    val runtimeErrorResourcePackage =
-//      "$file.integration.src.test.resources.ammonite.integration.errorTruncation"
-//    'runtimeError - checkErrorMessage(
-//      file = 'errorTruncation/"runtimeError.sc",
-//      expected =
-//        s"""Exception in thread "main" java.lang.ArithmeticException: / by zero
-//          |${tab}at $runtimeErrorResourcePackage.runtimeError$$.<init>(runtimeError.sc:1)
-//          |${tab}at $runtimeErrorResourcePackage.runtimeError$$.<clinit>(runtimeError.sc)
-//          |${tab}at $runtimeErrorResourcePackage.runtimeError.$$main(runtimeError.sc)
-//          |""".stripMargin
-//    )
+    'parseError - checkErrorMessage(
+      file = 'errorTruncation/"parseError.sc",
+      expected =
+        """Syntax Error: End:1:1 ..."}\n"
+          |}
+          |^
+          |""".stripMargin.replace("\n", System.lineSeparator())
+    )
+    val tab = '\t'
+    val runtimeErrorResourcePackage =
+      "$file.integration.src.test.resources.ammonite.integration.errorTruncation"
+    'runtimeError - checkErrorMessage(
+      file = 'errorTruncation/"runtimeError.sc",
+      expected =
+        s"""Exception in thread "main" java.lang.ArithmeticException: / by zero
+          |${tab}at $runtimeErrorResourcePackage.runtimeError$$.<init>(runtimeError.sc:1)
+          |${tab}at $runtimeErrorResourcePackage.runtimeError$$.<clinit>(runtimeError.sc)
+          |${tab}at $runtimeErrorResourcePackage.runtimeError.$$main(runtimeError.sc)
+          |""".stripMargin.replace("\n", System.lineSeparator())
+    )
   }
 }
