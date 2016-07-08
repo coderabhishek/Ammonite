@@ -24,14 +24,14 @@ object BasicTests extends TestSuite{
       assert(evaled.out.trim == "Hello World")
     }
 
-    val onWindowsMachine = System.getProperty("os.name").startsWith("Windows")
+    val windowsPlatform = System.getProperty("os.name").startsWith("Windows")
 
     //These tests currently do not pass on Windows, primarily for the reason that they all
     //involve loading from ivy which has different settings for windows
     //http://stackoverflow.com/questions/15487301/configure-apache-ant-and-ivy-on-windows-7
     'linuxOnlyTests {
 
-      if (onWindowsMachine) {
+      if (!windowsPlatform) {
         'complex {
           val evaled = exec('basic / "Complex.sc")
           println("44444444444444" + evaled.out.trim + "4444")
