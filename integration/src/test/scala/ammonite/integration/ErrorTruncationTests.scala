@@ -37,7 +37,7 @@ object ErrorTruncationTests extends TestSuite{
     'parseError - checkErrorMessage(
       file = 'errorTruncation/"parseError.sc",
       expected =
-        """Syntax Error: End:1:1 ..."}\n"
+        """Syntax Error: End:1:1 ..."}"
           |}
           |^
           |""".stripMargin.replace("\n", System.lineSeparator())
