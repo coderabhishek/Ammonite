@@ -20,18 +20,18 @@ object ScriptTests extends TestSuite{
 
     'exec{
       'compilationBlocks{
-        'loadIvy - retry(3){ // ivy or maven central seems to be flaky =/ =/ =/
-          check.session(s"""
-            @ import ammonite.ops._
-
-            @ load.exec($printedScriptPath/"LoadIvy.sc")
-
-            @ val r = res
-            r: String = ${"\"\"\""}
-            <a href="www.google.com">omg</a>
-            ${"\"\"\""}
-            """)
-        }
+//        'loadIvy - retry(3){ // ivy or maven central seems to be flaky =/ =/ =/
+//          check.session(s"""
+//            @ import ammonite.ops._
+//
+//            @ load.exec($printedScriptPath/"LoadIvy.sc")
+//
+//            @ val r = res
+//            r: String = ${"\"\"\""}
+//            <a href="www.google.com">omg</a>
+//            ${"\"\"\""}
+//            """)
+//        }
         'preserveImports{
           val typeString =
             if (!scala2_10)

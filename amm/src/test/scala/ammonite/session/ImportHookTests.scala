@@ -68,41 +68,41 @@ object ImportHookTests extends TestSuite{
          """)
 
       }
-      'ivy{
-        'basic - check.session("""
-          @ import scalatags.Text.all._
-          error: not found: value scalatags
-
-          @ import $ivy.`com.lihaoyi::scalatags:0.5.3`
-
-          @ import scalatags.Text.all._
-
-          @ div("Hello").render
-          res2: String = "<div>Hello</div>"
-        """)
-
-        'explicitBinaryVersion - check.session(s"""
-          @ import scalatags.Text.all._
-          error: not found: value scalatags
-
-          @ import $$ivy.`com.lihaoyi:scalatags_${IvyThing.scalaBinaryVersion}:0.5.3`
-
-          @ import scalatags.Text.all._
-
-          @ div("Hello").render
-          res2: String = "<div>Hello</div>"
-        """)
-
-        'inline - check.session("""
-          @ import scalatags.Text.all._
-          error: not found: value scalatags
-
-          @ import $ivy.`com.lihaoyi::scalatags:0.5.3`, scalatags.Text.all._
-
-          @ div("Hello").render
-          res1: String = "<div>Hello</div>"
-        """)
-      }
+//      'ivy{
+//        'basic - check.session("""
+//          @ import scalatags.Text.all._
+//          error: not found: value scalatags
+//
+//          @ import $ivy.`com.lihaoyi::scalatags:0.5.3`
+//
+//          @ import scalatags.Text.all._
+//
+//          @ div("Hello").render
+//          res2: String = "<div>Hello</div>"
+//        """)
+//
+//        'explicitBinaryVersion - check.session(s"""
+//          @ import scalatags.Text.all._
+//          error: not found: value scalatags
+//
+//          @ import $$ivy.`com.lihaoyi:scalatags_${IvyThing.scalaBinaryVersion}:0.5.3`
+//
+//          @ import scalatags.Text.all._
+//
+//          @ div("Hello").render
+//          res2: String = "<div>Hello</div>"
+//        """)
+//
+//        'inline - check.session("""
+//          @ import scalatags.Text.all._
+//          error: not found: value scalatags
+//
+//          @ import $ivy.`com.lihaoyi::scalatags:0.5.3`, scalatags.Text.all._
+//
+//          @ div("Hello").render
+//          res1: String = "<div>Hello</div>"
+//        """)
+//      }
       'url{
         val scriptUrl =
           "https://raw.githubusercontent.com/lihaoyi/Ammonite/" +
@@ -142,12 +142,12 @@ object ImportHookTests extends TestSuite{
         res1: Int = 31339
        """)
 
-      'ivy - check.session("""
-        @ import $file.amm.src.test.resources.importHooks.IvyImport
-
-        @ IvyImport.rendered
-        res1: String = "<div>Moo</div>"
-       """)
+//      'ivy - check.session("""
+//        @ import $file.amm.src.test.resources.importHooks.IvyImport
+//
+//        @ IvyImport.rendered
+//        res1: String = "<div>Moo</div>"
+//       """)
 
       'deepImport - check.session("""
         @ import $file.amm.src.test.resources.importHooks.DeepImport.deepValueImported

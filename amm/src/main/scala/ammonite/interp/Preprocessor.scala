@@ -43,12 +43,12 @@ object Preprocessor{
   def errMsg(msg: String, code: String, expected: String, idx: Int): String = {
     val locationString = {
       val (first, last) = code.splitAt(idx)
-      val lastSnippet = last.split('\n').headOption.getOrElse("")
-      val firstSnippet = first.reverse.split('\n').lift(0).getOrElse("").reverse
-      firstSnippet + lastSnippet + "\n" + (" " * firstSnippet.length) + "^"
+      val lastSnippet = last.split(System.lineSeparator()).headOption.getOrElse("")
+      val firstSnippet = first.reverse.split(System.lineSeparator()).lift(0).getOrElse("").reverse
+      firstSnippet + lastSnippet + System.lineSeparator() + (" " * firstSnippet.length) + "^"
     }
 
-    s"Syntax Error: $msg\n$locationString"
+    s"Syntax Error: $msg${System.lineSeparator()}$locationString"
   }
 
   /**
@@ -68,10 +68,10 @@ object Preprocessor{
 
         // comment holds comments or empty lines above the code which is not caught along with code
         for( (comment, code) <- s.value){
-          val ncomment = comment + "\n"*offset
+          val ncomment = comment + System.lineSeparator()*offset
 
-          // 1 is added as Separator parser eats up the '\n' following @
-          offset = offset + comment.count(_ == '\n') + code.map(_.count(_ == '\n')).sum + 1
+          // 1 is added as Separator parser eats up the newLine char following @
+          offset = offset + comment.count(_ == System.lineSeparator()) + code.map(_.count(_ == System.lineSeparator())).sum + 1
           blocks.append((ncomment, code))
         }
 
@@ -199,7 +199,7 @@ object Preprocessor{
     def complete(code: String, resultIndex: String, postSplit: Seq[String]) = {
       val reParsed = postSplit.map(p => (parse(p), p))
       val errors = reParsed.collect{case (Left(e), _) => e }
-      if (errors.length != 0) Res.Failure(None, errors.mkString("\n"))
+      if (errors.length != 0) Res.Failure(None, errors.mkString(System.lineSeparator()))
       else {
         val allDecls = for {
           ((Right(trees), code), i) <- reParsed.zipWithIndex if (trees.nonEmpty)
@@ -275,7 +275,10 @@ object Preprocessor{
         else s"${item.fromName.backticked} => ${item.toName.backticked}"
       }
       val pkgString = group.head.prefix.map(_.backticked).mkString(".")
-      "import " + pkgString + ".{\n  " + printedGroup.mkString(",\n  ") + "\n}\n"
+      s"""import ${pkgString}.{
+         | ${printedGroup.mkString(s",${System.lineSeparator()}  ")}
+         | }
+         |""".stripMargin.replace("\n", System.lineSeparator())
     }
     val res = out.mkString
 
@@ -293,9 +296,9 @@ object Preprocessor{
 package ${pkgName.map(_.backticked).mkString(".")}
 ${importBlock(imports)}
 
-object ${indexedWrapperName.backticked}{\n"""
+object ${indexedWrapperName.backticked}{${System.lineSeparator()}"""
 
-    val bottomWrapper = s"""\ndef $$main() = { $printCode }
+    val bottomWrapper = s"""${System.lineSeparator()}def $$main() = { $printCode }
   override def toString = "${indexedWrapperName.raw}"
 }
 """

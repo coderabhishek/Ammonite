@@ -43,12 +43,12 @@ object FailureTests extends TestSuite{
         res1: Int = 2
       """)
     }
-    'ivyFail{
-      check.session("""
-        @ import $ivy.`com.lihaoyi::upickle:0.1.12312-DOESNT-EXIST`
-        error: failed to resolve ivy dependencies
-      """)
-    }
+//    'ivyFail{
+//      check.session("""
+//        @ import $ivy.`com.lihaoyi::upickle:0.1.12312-DOESNT-EXIST`
+//        error: failed to resolve ivy dependencies
+//      """)
+//    }
 
     'exceptionHandling{
       check.fail("""throw new Exception("lol", new Exception("hoho"))""", x =>
