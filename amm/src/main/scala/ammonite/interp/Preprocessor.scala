@@ -304,7 +304,7 @@ object ${indexedWrapperName.backticked}{${System.lineSeparator()}"""
 """
     val importsLen = topWrapper.length
 
-    (topWrapper + code + bottomWrapper, importsLen)
+    (topWrapper.replace("\n", System.lineSeparator()) + code.replace("\n", System.lineSeparator()) + bottomWrapper.replace("\n", System.lineSeparator()), importsLen)
   }
 }
 
