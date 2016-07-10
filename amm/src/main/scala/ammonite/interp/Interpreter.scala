@@ -644,7 +644,7 @@ class Interpreter(prompt0: Ref[String],
         val (pkg, wrapper) = Util.pathToPackageWrapper(file, wd)
         processModule(
           ImportHook.Source.File(wd/"Main.sc"),
-          read(file),
+          read(file).replace("\n", System.lineSeparator()),
           wrapper,
           pkg,
           true

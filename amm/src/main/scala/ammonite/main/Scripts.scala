@@ -22,7 +22,7 @@ object Scripts {
     for{
       imports <- repl.interp.processModule(
         ImportHook.Source.File(path),
-        read(path),
+        read(path).replace("\n", System.lineSeparator()),
         wrapper,
         pkg,
         autoImport = true
