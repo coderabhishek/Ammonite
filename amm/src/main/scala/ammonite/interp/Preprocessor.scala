@@ -45,6 +45,7 @@ object Preprocessor{
       val (first, last) = code.splitAt(idx)
       val lastSnippet = last.split(System.lineSeparator()).headOption.getOrElse("")
       val firstSnippet = first.reverse.split(System.lineSeparator()).lift(0).getOrElse("").reverse
+      println("First Snippet => " + firstSnippet + "\n\n Second Snippet => " + lastSnippet + "]]]]]]]]]]]]]]]")
       firstSnippet + lastSnippet + System.lineSeparator() + (" " * firstSnippet.length) + "^"
     }
 
@@ -60,6 +61,7 @@ object Preprocessor{
   def splitScript(rawCode: String): Res[Seq[(String, Seq[String])]] = {
     Parsers.splitScript(rawCode) match {
       case f: Parsed.Failure =>
+        println("RAw Code ==> " + rawCode.split(System.lineSeparator()).map(x=> println(x + "\n")) + "\n|||||||||||||||||||||||||\n" + rawCode.map(_.toInt) + "\n==================================\n\n")
         Res.Failure(None, errMsg(f.msg, rawCode, f.extra.traced.expected, f.index))
       case s: Parsed.Success[Seq[(String, Seq[String])]] =>
 
