@@ -44,7 +44,7 @@ object Preprocessor{
     val locationString = {
       val (first, last) = code.splitAt(idx)
       val lastSnippet = last.split(System.lineSeparator()).headOption.getOrElse("")
-      val firstSnippet = first.split(System.lineSeparator()).last
+      val firstSnippet = first.reverse.split(System.lineSeparator().reverse).lift(0).getOrElse("").reverse
       firstSnippet + lastSnippet + System.lineSeparator() + (" " * firstSnippet.length) + "^"
     }
 
@@ -71,7 +71,7 @@ object Preprocessor{
           val ncomment = comment + System.lineSeparator()*offset
 
           // 1 is added as Separator parser eats up the newLine char following @
-          offset = offset + comment.count(_ == System.lineSeparator()) + code.map(_.count(_ == System.lineSeparator())).sum + 1
+          offset = offset + (comment.split(System.lineSeparator(), -1).length - 1) + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + 1
           blocks.append((ncomment, code))
         }
 
@@ -303,7 +303,6 @@ object ${indexedWrapperName.backticked}{${System.lineSeparator()}"""
 }
 """
     val importsLen = topWrapper.length
-
     (topWrapper.replace("\n", System.lineSeparator()) + code.replace("\n", System.lineSeparator()) + bottomWrapper.replace("\n", System.lineSeparator()), importsLen)
   }
 }

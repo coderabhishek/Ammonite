@@ -23,12 +23,11 @@ object LineNumberTests extends TestSuite{
     }
 
     'errorTest - {
-      if(windowsPlatform) {
+      if(!windowsPlatform) {
         checkErrorMessage(
           file = 'lineNumbers / "ErrorLineNumberTest.sc",
           expected =
-            s"""Syntax Error: ("}" | `case`):5:24 ...")${newLine}  }${newLine}${newLine}
-  d"
+            s"""Syntax Error: ("}" | `case`):5:24 ...")${newLine}  }${newLine}${newLine}  d"
                 |    printlnqs(unsorted))
                 |                       ^""".
             stripMargin
@@ -37,7 +36,7 @@ object LineNumberTests extends TestSuite{
     }
 
     'multipleCompilationUnitErrorTest1 - {
-      if(windowsPlatform) {
+      if(!windowsPlatform) {
         checkErrorMessage(
           file = 'lineNumbers/"MultipleCompilationUnitErrorMsgTest1.sc",
           expected =
@@ -50,7 +49,7 @@ object LineNumberTests extends TestSuite{
 
 
     'multipleCompilationUnitErrorTest2 - {
-      if(windowsPlatform) {
+      if(!windowsPlatform) {
         checkErrorMessage(
           file = 'lineNumbers/"MultipleCompilationUnitErrorMsgTest2.sc",
           expected =
@@ -65,8 +64,7 @@ object LineNumberTests extends TestSuite{
       file = 'lineNumbers/"compilationErrorWithCommentsAtTop.sc",
       expected =
         """compilationErrorWithCommentsAtTop.sc:11: not found: value quicort
-          |    quicort(unsorted.filter(_ < pivot)):::List(pivot):::""".stripMargin +
-        """quicksort(unsorted.filter(_ > pivot))"""
+          |    quicort(unsorted.filter(_ < pivot)):::List(pivot):::""".stripMargin
     )
 
     'compilationErrorInSecondBlock - checkErrorMessage(
