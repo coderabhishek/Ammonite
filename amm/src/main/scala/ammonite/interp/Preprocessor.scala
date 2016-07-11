@@ -44,7 +44,7 @@ object Preprocessor{
     val locationString = {
       val (first, last) = code.splitAt(idx)
       val lastSnippet = last.split(System.lineSeparator()).headOption.getOrElse("")
-      val firstSnippet = first.reverse.split(System.lineSeparator()).lift(0).getOrElse("").reverse
+      val firstSnippet = first.split(System.lineSeparator()).last
       println("First Snippet => " + firstSnippet + "\n\n Second Snippet => " + lastSnippet + "]]]]]]]]]]]]]]]")
       firstSnippet + lastSnippet + System.lineSeparator() + (" " * firstSnippet.length) + "^"
     }
