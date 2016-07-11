@@ -265,6 +265,7 @@ class Interpreter(prompt0: Ref[String],
   def compileClass(processed: Preprocessor.Output,
                    printer: Printer,
                    fileName: String): Res[(Util.ClassFiles, Imports)] = for {
+    _ <- Res.Success(processed.code.split(System.lineSeparator()).map(x=> println("|||||||||||||||||\n" + x + "\n||||||||||||||\n\n")))
     compiled <- Res.Success{
       compiler.compile(processed.code.getBytes, printer, processed.prefixCharLength, fileName)
     }
