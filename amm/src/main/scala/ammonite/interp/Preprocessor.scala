@@ -45,7 +45,6 @@ object Preprocessor{
       val (first, last) = code.splitAt(idx)
       val lastSnippet = last.split(System.lineSeparator()).headOption.getOrElse("")
       val firstSnippet = first.split(System.lineSeparator()).last
-      println("First Snippet => " + firstSnippet + "\n\n Second Snippet => " + lastSnippet + "]]]]]]]]]]]]]]]")
       firstSnippet + lastSnippet + System.lineSeparator() + (" " * firstSnippet.length) + "^"
     }
 
