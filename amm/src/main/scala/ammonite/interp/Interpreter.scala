@@ -332,7 +332,6 @@ class Interpreter(prompt0: Ref[String],
                          printCode: String): Res[(Class[_], Imports, String)] =
     timer{
 
-
       val fullyQualifiedName = (pkgName :+ wrapperName).map(_.encoded).mkString(".")
       val tag = Interpreter.cacheTag(
         processed.code, Nil, eval.sess.frames.head.classloader.classpathHash

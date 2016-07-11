@@ -13,13 +13,14 @@ object LineNumberTests extends TestSuite{
   val tests = this{
 
     def checkErrorMessage(file: RelPath, expected: String) = {
-      val e = intercept[ShelloutException]{
+      val res = intercept[ShelloutException]{
         exec(file)
-      }.result.err.string
+      }.result
+      val e = res.err.string
+      println("==================================\n" + res.out.string + "================")
 
       println("4444444444\n" + e + "\n" + expected + "\n3333333333333333333333")
       println("$$$$$$$$$$\n" + e.map(_.toInt) + "\n" + expected.map(_.toInt) + "\n######################")
-      read(cwd/'integration/'src/'test/'resources/'ammonite/'integration/file).split(System.lineSeparator()).map(x => println("||||||||||||||||||||\n" + x + "\n||||||||||||"))
       assert(e.contains(expected.replace("\n", System.lineSeparator())))
     }
 
