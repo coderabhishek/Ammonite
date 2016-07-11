@@ -22,37 +22,44 @@ object LineNumberTests extends TestSuite{
       assert(e.contains(expected.replace("\n", System.lineSeparator())))
     }
 
-    'errorTest - checkErrorMessage(
+    'errorTest - {
       if(windowsPlatform) {
-        file = 'lineNumbers / "ErrorLineNumberTest.sc",
-        expected =
-          s"""Syntax Error: ("}" | `case`):5:24 ...")${newLine}  }${newLine}${newLine}
+        checkErrorMessage(
+          file = 'lineNumbers / "ErrorLineNumberTest.sc",
+          expected =
+            s"""Syntax Error: ("}" | `case`):5:24 ...")${newLine}  }${newLine}${newLine}
   d"
-          |    printlnqs(unsorted))
-          |                       ^""".stripMargin
-        }
-    )
+                |    printlnqs(unsorted))
+                |                       ^""".
+            stripMargin
+        )
+      }
+    }
 
-    'multipleCompilationUnitErrorTest1 - checkErrorMessage(
+    'multipleCompilationUnitErrorTest1 - {
       if(windowsPlatform) {
-        file = 'lineNumbers / "MultipleCompilationUnitErrorMsgTest1.sc",
-        expected =
-          """Syntax Error: End:5:1 ..."}"
-          |}
-          |^""".stripMargin
-        }
-    )
+        checkErrorMessage(
+          file = 'lineNumbers/"MultipleCompilationUnitErrorMsgTest1.sc",
+          expected =
+            """Syntax Error: End:5:1 ..."}"
+              |}
+              |^""".stripMargin
+        )
+      }
+    }
 
 
-    'multipleCompilationUnitErrorTest2 - checkErrorMessage(
+    'multipleCompilationUnitErrorTest2 - {
       if(windowsPlatform) {
-        file = 'lineNumbers / "MultipleCompilationUnitErrorMsgTest2.sc",
-        expected =
-          """Syntax Error: End:3:1 ..."}\n@\n1 + 1"
-          |}
-          |^""".stripMargin
-        }
-    )
+        checkErrorMessage(
+          file = 'lineNumbers/"MultipleCompilationUnitErrorMsgTest2.sc",
+          expected =
+            """Syntax Error: End:3:1 ..."}\n@\n1 + 1"
+              |}
+              |^""".stripMargin
+        )
+      }
+    }
 
     'compilationErrorWithCommentsAtTop - checkErrorMessage(
       file = 'lineNumbers/"compilationErrorWithCommentsAtTop.sc",
