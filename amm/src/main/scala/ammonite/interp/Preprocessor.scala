@@ -61,7 +61,6 @@ object Preprocessor{
   def splitScript(rawCode: String): Res[Seq[(String, Seq[String])]] = {
     Parsers.splitScript(rawCode) match {
       case f: Parsed.Failure =>
-        println("RAw Code ==> " + rawCode.split(System.lineSeparator()).map(x=> println(x + "\n")) + "\n|||||||||||||||||||||||||\n" + rawCode.map(_.toInt) + "\n==================================\n\n")
         Res.Failure(None, errMsg(f.msg, rawCode, f.extra.traced.expected, f.index))
       case s: Parsed.Success[Seq[(String, Seq[String])]] =>
 
