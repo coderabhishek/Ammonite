@@ -89,7 +89,7 @@ object Preprocessor{
                   imports: Imports,
                   printerTemplate: String => String) = for{
       Preprocessor.Expanded(code, printer) <- expandStatements(stmts, resultIndex)
-//    _ <- Res.Success(println("===ll==" + leadingSpaces + "===" + code + "======"))
+    _ <- Res.Success(println("===ll==" + leadingSpaces + "===" + code + "======"))
       (wrappedCode, importsLength) = wrapCode(
         pkgName, indexedWrapperName, leadingSpaces + code,
         printerTemplate(printer.mkString(", ")),
