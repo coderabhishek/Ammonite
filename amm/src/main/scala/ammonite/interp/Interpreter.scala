@@ -406,7 +406,7 @@ class Interpreter(prompt0: Ref[String],
   }
 
   def preprocessScript(source: ImportHook.Source, code: String) = for{
-    blocks <- Preprocessor.splitScript(Interpreter.skipSheBangLine(code).replace("\r", "").replace("\n", System.lineSeparator()))
+    blocks <- Preprocessor.splitScript(Interpreter.skipSheBangLine(code))
     hooked <- Res.map(blocks){case (prelude, stmts) => resolveImportHooks(source, stmts) }
     (hookImports, hookBlocks, importTrees) = hooked.unzip3
   } yield (blocks.map(_._1).zip(hookBlocks), Imports(hookImports.flatMap(_.value)), importTrees)
