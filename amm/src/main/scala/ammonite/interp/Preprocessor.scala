@@ -73,6 +73,7 @@ object Preprocessor{
           // 1 is added as Separator parser eats up the newLine char following @
           offset = offset + (comment.split(System.lineSeparator(), -1).length - 1) + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + 1
           println("Offset--->" + offset)
+          println(((ncomment + code).split("quicort")(0).split(System.lineSeparator(), -1).length - 1).toString)
           blocks.append((ncomment, code))
         }
 
