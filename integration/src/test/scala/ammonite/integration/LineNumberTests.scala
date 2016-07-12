@@ -17,6 +17,7 @@ object LineNumberTests extends TestSuite{
         exec(file)
       }.result
       val e = res.err.string
+      println(res.out.string)
       println("4444444444\n" + e + "\n" + expected + "\n3333333333333333333333")
       println("$$$$$$$$$$\n" + e.map(_.toInt) + "\n" + expected.map(_.toInt) + "\n######################")
       assert(e.contains(expected.replace("\n", System.lineSeparator())))
