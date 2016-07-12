@@ -68,6 +68,7 @@ object Preprocessor{
 
         // comment holds comments or empty lines above the code which is not caught along with code
         for( (comment, code) <- s.value){
+          println("====" + comment + "====")
           val ncomment = comment + System.lineSeparator()*offset
 
           // 1 is added as Separator parser eats up the newLine char following @
@@ -89,7 +90,6 @@ object Preprocessor{
                   imports: Imports,
                   printerTemplate: String => String) = for{
       Preprocessor.Expanded(code, printer) <- expandStatements(stmts, resultIndex)
-    _ <- Res.Success(println("===ll==" + leadingSpaces + "===" + code + "======"))
       (wrappedCode, importsLength) = wrapCode(
         pkgName, indexedWrapperName, leadingSpaces + code,
         printerTemplate(printer.mkString(", ")),
