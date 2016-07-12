@@ -298,14 +298,16 @@ object Preprocessor{
 package ${pkgName.map(_.backticked).mkString(".")}
 ${importBlock(imports)}
 
-object ${indexedWrapperName.backticked}{\n""".replace("\n", System.lineSeparator())
+object ${indexedWrapperName.backticked}{\n"""
+    println("|||||" + topWrapper.contains("\r") + "||||||")
+    println("========" + code + "========")
 
     val bottomWrapper = s"""\ndef $$main() = { $printCode }
   override def toString = "${indexedWrapperName.raw}"
 }
 """.replace("\n", System.lineSeparator())
-    val importsLen = topWrapper.length
-    (topWrapper + code + bottomWrapper, importsLen)
+    val importsLen = topWrapper.replace("\n", System.lineSeparator()).length
+    (topWrapper.replace("\n", System.lineSeparator()) + code + bottomWrapper, importsLen)
   }
 }
 
