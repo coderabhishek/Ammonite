@@ -72,8 +72,6 @@ object Preprocessor{
 
           // 1 is added as Separator parser eats up the newLine char following @
           offset = offset + (comment.split(System.lineSeparator(), -1).length - 1) + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + 1
-          println("Offset--->" + offset)
-          println(((ncomment + code).split("quicort")(0).split(System.lineSeparator(), -1).length - 1).toString)
           blocks.append((ncomment, code))
         }
 
@@ -91,6 +89,7 @@ object Preprocessor{
                   imports: Imports,
                   printerTemplate: String => String) = for{
       Preprocessor.Expanded(code, printer) <- expandStatements(stmts, resultIndex)
+//    _ <- Res.Success(println("===ll==" + leadingSpaces + "===" + code + "======"))
       (wrappedCode, importsLength) = wrapCode(
         pkgName, indexedWrapperName, leadingSpaces + code,
         printerTemplate(printer.mkString(", ")),
@@ -278,9 +277,9 @@ object Preprocessor{
       }
       val pkgString = group.head.prefix.map(_.backticked).mkString(".")
       s"""import ${pkgString}.{
-         | ${printedGroup.mkString(s",${System.lineSeparator()}  ")}
+         | ${printedGroup.mkString(s",\n  ")}
          | }
-         |""".stripMargin.replace("\n", System.lineSeparator())
+         |""".stripMargin
     }
     val res = out.mkString
 
@@ -298,16 +297,14 @@ object Preprocessor{
 package ${pkgName.map(_.backticked).mkString(".")}
 ${importBlock(imports)}
 
-object ${indexedWrapperName.backticked}{\n"""
-    println("|||||" + topWrapper.contains("\r") + "||||||")
-    println("========" + code + "========")
+object ${indexedWrapperName.backticked}{\n""".replace("\n", System.lineSeparator())
 
     val bottomWrapper = s"""\ndef $$main() = { $printCode }
   override def toString = "${indexedWrapperName.raw}"
 }
 """.replace("\n", System.lineSeparator())
-    val importsLen = topWrapper.replace("\n", System.lineSeparator()).length
-    (topWrapper.replace("\n", System.lineSeparator()) + code + bottomWrapper, importsLen)
+    val importsLen = topWrapper.length
+    (topWrapper + code + bottomWrapper, importsLen)
   }
 }
 
