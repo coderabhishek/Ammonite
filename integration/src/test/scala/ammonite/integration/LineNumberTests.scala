@@ -23,51 +23,51 @@ object LineNumberTests extends TestSuite{
       assert(e.contains(expected.replace("\n", System.lineSeparator())))
     }
 
-//    'errorTest - {
-//      if(!windowsPlatform) {
-//        checkErrorMessage(
-//          file = 'lineNumbers / "ErrorLineNumberTest.sc",
-//          expected =
-//            s"""Syntax Error: ("}" | `case`):5:24 ...")${newLine}  }${newLine}${newLine}  d"
-//                |    printlnqs(unsorted))
-//                |                       ^""".
-//            stripMargin
-//        )
-//      }
-//    }
-//
-//    'multipleCompilationUnitErrorTest1 - {
-//      if(!windowsPlatform) {
-//        checkErrorMessage(
-//          file = 'lineNumbers/"MultipleCompilationUnitErrorMsgTest1.sc",
-//          expected =
-//            """Syntax Error: End:5:1 ..."}"
-//              |}
-//              |^""".stripMargin
-//        )
-//      }
-//    }
-//
-//
-//    'multipleCompilationUnitErrorTest2 - {
-//      if(!windowsPlatform) {
-//        checkErrorMessage(
-//          file = 'lineNumbers/"MultipleCompilationUnitErrorMsgTest2.sc",
-//          expected =
-//            """Syntax Error: End:3:1 ..."}\n@\n1 + 1"
-//              |}
-//              |^""".stripMargin
-//        )
-//      }
-//    }
-//
-//    'compilationErrorWithCommentsAtTop - checkErrorMessage(
-//      file = 'lineNumbers/"compilationErrorWithCommentsAtTop.sc",
-//      expected =
-//        """compilationErrorWithCommentsAtTop.sc:11: not found: value quicort
-//          |    quicort(unsorted.filter(_ < pivot)):::List(pivot):::""".stripMargin
-//    )
-//
+    'errorTest - {
+      if(!windowsPlatform) {
+        checkErrorMessage(
+          file = 'lineNumbers / "ErrorLineNumberTest.sc",
+          expected =
+            s"""Syntax Error: ("}" | `case`):5:24 ...")${newLine}  }${newLine}${newLine}  d"
+                |    printlnqs(unsorted))
+                |                       ^""".
+            stripMargin
+        )
+      }
+    }
+
+    'multipleCompilationUnitErrorTest1 - {
+      if(!windowsPlatform) {
+        checkErrorMessage(
+          file = 'lineNumbers/"MultipleCompilationUnitErrorMsgTest1.sc",
+          expected =
+            """Syntax Error: End:5:1 ..."}"
+              |}
+              |^""".stripMargin
+        )
+      }
+    }
+
+
+    'multipleCompilationUnitErrorTest2 - {
+      if(!windowsPlatform) {
+        checkErrorMessage(
+          file = 'lineNumbers/"MultipleCompilationUnitErrorMsgTest2.sc",
+          expected =
+            """Syntax Error: End:3:1 ..."}\n@\n1 + 1"
+              |}
+              |^""".stripMargin
+        )
+      }
+    }
+
+    'compilationErrorWithCommentsAtTop - checkErrorMessage(
+      file = 'lineNumbers/"compilationErrorWithCommentsAtTop.sc",
+      expected =
+        """compilationErrorWithCommentsAtTop.sc:11: not found: value quicort
+          |    quicort(unsorted.filter(_ < pivot)):::List(pivot):::""".stripMargin
+    )
+
     'compilationErrorInSecondBlock - checkErrorMessage(
       file = 'lineNumbers/"compilationErrorInSecondBlock.sc",
       expected =

@@ -68,6 +68,9 @@ object Preprocessor{
 
         // comment holds comments or empty lines above the code which is not caught along with code
         for( (comment, code) <- s.value){
+
+          //ncomment has required number of newLines appended based on OS and offset
+          //fastparse behaves differently for "\n" and "\r\n" thats why the substring thing is necessary
           val ncomment = Util.windowsPlatform match {
             case true =>
               if(!blocks.isEmpty)
@@ -75,14 +78,9 @@ object Preprocessor{
               else comment + System.lineSeparator() * offset
             case false => comment + System.lineSeparator() * offset
           }
-          // 1 is added as Separator parser eats up the newLine char following @
-//          val extraOffset =  Util.windowsPlatform match{
-//            case true => 0
-//            case false => 1
-//          }
 
+          // 1 is added as Separator parser eats up the newLine char following @
           offset = offset + (comment.split(System.lineSeparator(), -1).length - 1) + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + 1
-          println("Comment==>" + comment.map(_.toInt) + "==" + (comment.split(System.lineSeparator(), -1).length - 1) + "======code==>" + code + "==" + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + "=========\noffset==>" + offset)
           blocks.append((ncomment, code))
         }
 
