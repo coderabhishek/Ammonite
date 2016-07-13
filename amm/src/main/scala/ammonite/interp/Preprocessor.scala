@@ -71,13 +71,13 @@ object Preprocessor{
           val ncomment = comment + System.lineSeparator()*offset
 
           // 1 is added as Separator parser eats up the newLine char following @
-          val extraOffset =  windowsPlatform match{
+          val extraOffset =  Util.windowsPlatform match{
             case true => 0
             case false => 1
           }
 
-          val ncode = windowsPlatform match{
-            case true => if(!blocks.empty) code.substring(1) else code
+          val ncode = Util.windowsPlatform match{
+            case true => if(!blocks.isEmpty) code(0).substring(1) +: code.tail else code
             case false => code
           }
 
