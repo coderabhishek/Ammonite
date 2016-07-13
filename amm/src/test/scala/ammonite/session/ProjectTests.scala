@@ -2,6 +2,7 @@ package ammonite.session
 
 import ammonite.TestRepl
 import ammonite.TestUtils._
+import ammonite.util.Util.windowsPlatform
 import utest._
 
 import scala.collection.{immutable => imm}
@@ -13,7 +14,7 @@ object ProjectTests extends TestSuite{
     'load{
       'ivy{
         'standalone - {
-          if(windowsPlatform){
+          if(!windowsPlatform){
             retry(3){ // ivy or maven central are flaky =/
             val tq = "\"\"\""
               check.session(s"""
@@ -34,7 +35,7 @@ object ProjectTests extends TestSuite{
           }
         }
         'akkahttp{
-          if(windowsPlatform){
+          if(!windowsPlatform){
             check.session("""
               @ import $ivy.`com.typesafe.akka::akka-http-experimental:1.0-M3`
 
@@ -69,7 +70,7 @@ object ProjectTests extends TestSuite{
           }
         }
         'resolvers - {
-          if(windowsPlatform){
+          if(!windowsPlatform){
             retry(2){// ivy flakyness...
               check.session("""
             @ import $ivy.`com.ambiata::mundane:1.2.1-20141230225616-50fc792`

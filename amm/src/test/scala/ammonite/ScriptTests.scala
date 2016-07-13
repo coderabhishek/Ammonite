@@ -5,7 +5,7 @@ import ammonite.interp.{History, Interpreter, Storage}
 import ammonite.main.Defaults
 import ammonite.ops._
 import ammonite.tools.IvyConstructor._
-import ammonite.util.{Colors, Printer, Ref, Timer}
+import ammonite.util.{Colors, Printer, Ref, Timer, Util}
 import utest._
 
 object ScriptTests extends TestSuite{
@@ -21,7 +21,7 @@ object ScriptTests extends TestSuite{
     'exec{
       'compilationBlocks{
         'loadIvy - retry(3){ // ivy or maven central seems to be flaky =/ =/ =/
-            if(windowsPlatform){
+            if(!Util.windowsPlatform){
               check.session(s"""
               @ import ammonite.ops._
 

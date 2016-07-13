@@ -4,7 +4,7 @@ import ammonite.interp.{History, Interpreter, Storage}
 import ammonite.main.Defaults
 import ammonite.ops._
 import ammonite.tools.IvyConstructor._
-import ammonite.util.{Colors, Printer, Ref, Timer}
+import ammonite.util.{Colors, Printer, Ref, Timer, Util}
 import utest._
 
 object CachingTests extends TestSuite{
@@ -126,7 +126,7 @@ object CachingTests extends TestSuite{
       assert(n2 == 0) // all three should be cached
     }
     'tags {
-      if (windowsPlatform) {
+      if (!Util.windowsPlatform) {
         val storage = Storage.InMemory()
         val interp = createTestInterp(storage)
         interp.replApi.load.module(scriptPath / "TagBase.sc")

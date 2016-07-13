@@ -35,7 +35,7 @@ object ErrorTruncationTests extends TestSuite{
     )
 
     'parseError - {
-      if(windowsPlatform){
+      if(!windowsPlatform){
         checkErrorMessage(
           file = 'errorTruncation/"parseError.sc",
           expected =

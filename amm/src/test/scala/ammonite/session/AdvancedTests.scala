@@ -2,7 +2,7 @@ package ammonite.session
 
 import ammonite.TestUtils._
 import ammonite.TestRepl
-import ammonite.util.Res
+import ammonite.util.{Res, Util}
 import utest._
 
 
@@ -241,7 +241,7 @@ object AdvancedTests extends TestSuite{
       """)
     }
     'compilerPlugin{
-      if(windowsPlatform){
+      if(!Util.windowsPlatform){
         check.session("""
         @ // Make sure plugins from eval class loader are not loaded
 

@@ -1,6 +1,7 @@
 package ammonite.session
 
 import ammonite.TestRepl
+import ammonite.util.Util.windowsPlatform
 import utest._
 
 import scala.collection.{immutable => imm}
@@ -128,7 +129,7 @@ object BuiltinTests extends TestSuite{
 
 
     'saveLoad {
-      if(windowsPlatform){
+      if(!windowsPlatform){
         check.session(
           """
         @ val veryImportant = 1

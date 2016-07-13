@@ -7,6 +7,7 @@ import utest._
 
 import scala.collection.{immutable => imm}
 import scala.util.Properties
+import ammonite.util.Util
 
 object ImportHookTests extends TestSuite{
 
@@ -70,7 +71,7 @@ object ImportHookTests extends TestSuite{
       }
       'ivy{
         'basic - {
-          if(windowsPlatform){
+          if(!Util.windowsPlatform){
             check.session("""
               @ import scalatags.Text.all._
               error: not found: value scalatags
@@ -86,7 +87,7 @@ object ImportHookTests extends TestSuite{
         }
 
         'explicitBinaryVersion - {
-          if(windowsPlatform){
+          if(!Util.windowsPlatform){
             check.session(s"""
               @ import scalatags.Text.all._
               error: not found: value scalatags
@@ -102,7 +103,7 @@ object ImportHookTests extends TestSuite{
         }
 
         'inline - {
-          if(windowsPlatform){
+          if(!Util.windowsPlatform){
             check.session("""
               @ import scalatags.Text.all._
               error: not found: value scalatags
@@ -155,7 +156,7 @@ object ImportHookTests extends TestSuite{
        """)
 
       'ivy - {
-        if(windowsPlatform){
+        if(!Util.windowsPlatform){
           check.session("""
             @ import $file.amm.src.test.resources.importHooks.IvyImport
 
