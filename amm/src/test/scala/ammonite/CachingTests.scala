@@ -125,16 +125,18 @@ object CachingTests extends TestSuite{
       assert(n1 == 2) // hardcodedPredef + loadedPredef
       assert(n2 == 0) // all three should be cached
     }
-//    'tags{
-//      val storage = Storage.InMemory()
-//      val interp = createTestInterp(storage)
-//      interp.replApi.load.module(scriptPath/"TagBase.sc")
-//      interp.replApi.load.module(scriptPath/"TagPrevCommand.sc")
-//      interp.replApi.load.ivy("com.lihaoyi" %% "scalatags" % "0.4.5")
-//      interp.replApi.load.module(scriptPath/"TagBase.sc")
-//      val n = storage.compileCache.size
-//      assert(n == 5) // predef + two blocks for initial load
-//    }
+    'tags {
+      if (windowsPlatform) {
+        val storage = Storage.InMemory()
+        val interp = createTestInterp(storage)
+        interp.replApi.load.module(scriptPath / "TagBase.sc")
+        interp.replApi.load.module(scriptPath / "TagPrevCommand.sc")
+        interp.replApi.load.ivy("com.lihaoyi" %% "scalatags" % "0.4.5")
+        interp.replApi.load.module(scriptPath / "TagBase.sc")
+        val n = storage.compileCache.size
+        assert(n == 5) // predef + two blocks for initial load
+      }
+    }
 
     'changeScriptInvalidation{
       // This makes sure that the compile caches are properly utilized, and

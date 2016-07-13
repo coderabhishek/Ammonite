@@ -11,79 +11,85 @@ object ProjectTests extends TestSuite{
     println("ProjectTests")
     val check = new TestRepl()
     'load{
-//      'ivy{
-//        'standalone - retry(3){ // ivy or maven central are flaky =/
-//          val tq = "\"\"\""
-//          check.session(s"""
-//            @ import scalatags.Text.all._
-//            error: not found: value scalatags
-//
-//            @ import $$ivy.`com.lihaoyi::scalatags:0.5.4`
-//
-//            @ import scalatags.Text.all._
-//            import scalatags.Text.all._
-//
-//            @ a("omg", href:="www.google.com").render
-//            res2: String = $tq
-//            <a href="www.google.com">omg</a>
-//            $tq
-//          """)
-//        }
-//        'akkahttp{
-//          check.session("""
-//            @ import $ivy.`com.typesafe.akka::akka-http-experimental:1.0-M3`
-//
-//            @ implicit val system = akka.actor.ActorSystem()
-//
-//            @ val serverBinding = akka.http.Http(system).bind(interface = "localhost", port = 31337)
-//
-//            @ implicit val materializer = akka.stream.ActorFlowMaterializer()
-//
-//            @ var set = false
-//
-//            @ serverBinding.connections.runForeach { connection =>
-//            @   set = true
-//            @ }
-//
-//            @ set
-//            res6: Boolean = false
-//
-//            @ akka.stream.scaladsl.Source(
-//            @   List(akka.http.model.HttpRequest(uri="/"))
-//            @ ).via(
-//            @   akka.http.Http().outgoingConnection("localhost", port=31337).flow
-//            @ ).runForeach(println)
-//
-//            @ Thread.sleep(200)
-//
-//            @ set
-//            res9: Boolean = true
-//
-//            @ system.shutdown()
-//          """)
-//        }
-//        'resolvers - retry(2){// ivy flakyness...
-//          check.session("""
-//            @ import $ivy.`com.ambiata::mundane:1.2.1-20141230225616-50fc792`
-//            error: IvyResolutionException
-//
-//            @ import ammonite._, Resolvers._
-//
-//            @ val oss = Resolver.Http(
-//            @   "ambiata-oss",
-//            @   "https://ambiata-oss.s3-ap-southeast-2.amazonaws.com",
-//            @   IvyPattern,
-//            @   false
-//            @ )
-//
-//            @ resolvers() = resolvers() :+ oss
-//
-//            @ import $ivy.`com.ambiata::mundane:1.2.1-20141230225616-50fc792`
-//
-//            @ import com.ambiata.mundane._
-//          """)
-//        }
-//      }
+      'ivy{
+        'standalone - if(windowsPlatform){
+          retry(3){ // ivy or maven central are flaky =/
+          val tq = "\"\"\""
+            check.session(s"""
+            @ import scalatags.Text.all._
+            error: not found: value scalatags
+
+            @ import $$ivy.`com.lihaoyi::scalatags:0.5.4`
+
+            @ import scalatags.Text.all._
+            import scalatags.Text.all._
+
+            @ a("omg", href:="www.google.com").render
+            res2: String = $tq
+            <a href="www.google.com">omg</a>
+            $tq
+          """)
+          }
+        }
+        'akkahttp{
+          if(windowsPlatform){
+            check.session("""
+              @ import $ivy.`com.typesafe.akka::akka-http-experimental:1.0-M3`
+
+              @ implicit val system = akka.actor.ActorSystem()
+
+              @ val serverBinding = akka.http.Http(system).bind(interface = "localhost", port = 31337)
+
+              @ implicit val materializer = akka.stream.ActorFlowMaterializer()
+
+              @ var set = false
+
+              @ serverBinding.connections.runForeach { connection =>
+              @   set = true
+              @ }
+
+              @ set
+              res6: Boolean = false
+
+              @ akka.stream.scaladsl.Source(
+              @   List(akka.http.model.HttpRequest(uri="/"))
+              @ ).via(
+              @   akka.http.Http().outgoingConnection("localhost", port=31337).flow
+              @ ).runForeach(println)
+
+              @ Thread.sleep(200)
+
+              @ set
+              res9: Boolean = true
+
+              @ system.shutdown()
+             """)
+          }
+        }
+        'resolvers - if(windowsPlatform){
+          retry(2){// ivy flakyness...
+            check.session("""
+            @ import $ivy.`com.ambiata::mundane:1.2.1-20141230225616-50fc792`
+            error: IvyResolutionException
+
+            @ import ammonite._, Resolvers._
+
+            @ val oss = Resolver.Http(
+            @   "ambiata-oss",
+            @   "https://ambiata-oss.s3-ap-southeast-2.amazonaws.com",
+            @   IvyPattern,
+            @   false
+            @ )
+
+            @ resolvers() = resolvers() :+ oss
+
+            @ import $ivy.`com.ambiata::mundane:1.2.1-20141230225616-50fc792`
+
+            @ import com.ambiata.mundane._
+                          """)
+          }
+        }
+      }
       'code{
         check.session("""
           @ load("val x = 1")
