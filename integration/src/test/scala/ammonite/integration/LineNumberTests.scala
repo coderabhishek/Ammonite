@@ -23,43 +23,43 @@ object LineNumberTests extends TestSuite{
       assert(e.contains(expected.replace("\n", System.lineSeparator())))
     }
 
-//    'errorTest - {
-//      if(!windowsPlatform) {
-//        checkErrorMessage(
-//          file = 'lineNumbers / "ErrorLineNumberTest.sc",
-//          expected =
-//            s"""Syntax Error: ("}" | `case`):5:24 ...")${newLine}  }${newLine}${newLine}  d"
-//                |    printlnqs(unsorted))
-//                |                       ^""".
-//            stripMargin
-//        )
-//      }
-//    }
-//
-//    'multipleCompilationUnitErrorTest1 - {
-//      if(!windowsPlatform) {
-//        checkErrorMessage(
-//          file = 'lineNumbers/"MultipleCompilationUnitErrorMsgTest1.sc",
-//          expected =
-//            """Syntax Error: End:5:1 ..."}"
-//              |}
-//              |^""".stripMargin
-//        )
-//      }
-//    }
-//
-//
-//    'multipleCompilationUnitErrorTest2 - {
-//      if(!windowsPlatform) {
-//        checkErrorMessage(
-//          file = 'lineNumbers/"MultipleCompilationUnitErrorMsgTest2.sc",
-//          expected =
-//            """Syntax Error: End:3:1 ..."}\n@\n1 + 1"
-//              |}
-//              |^""".stripMargin
-//        )
-//      }
-//    }
+    'errorTest - {
+      if(!windowsPlatform) {
+        checkErrorMessage(
+          file = 'lineNumbers / "ErrorLineNumberTest.sc",
+          expected =
+            s"""Syntax Error: ("}" | `case`):5:24 ...")${newLine}  }${newLine}${newLine}  d"
+                |    printlnqs(unsorted))
+                |                       ^""".
+            stripMargin
+        )
+      }
+    }
+
+    'multipleCompilationUnitErrorTest1 - {
+      if(!windowsPlatform) {
+        checkErrorMessage(
+          file = 'lineNumbers/"MultipleCompilationUnitErrorMsgTest1.sc",
+          expected =
+            """Syntax Error: End:5:1 ..."}"
+              |}
+              |^""".stripMargin
+        )
+      }
+    }
+
+
+    'multipleCompilationUnitErrorTest2 - {
+      if(!windowsPlatform) {
+        checkErrorMessage(
+          file = 'lineNumbers/"MultipleCompilationUnitErrorMsgTest2.sc",
+          expected =
+            """Syntax Error: End:3:1 ..."}\n@\n1 + 1"
+              |}
+              |^""".stripMargin
+        )
+      }
+    }
 
     'compilationErrorWithCommentsAtTop - checkErrorMessage(
       file = 'lineNumbers/"compilationErrorWithCommentsAtTop.sc",
@@ -76,30 +76,30 @@ object LineNumberTests extends TestSuite{
           |            ^""".stripMargin
     )
 
-//    'compilationErrorInFourthBlock - checkErrorMessage(
-//      file = 'lineNumbers/"compilationErrorInFourthBlock.sc",
-//      expected =
-//        """compilationErrorInFourthBlock.sc:30: not found: value prinntl
-//          |val res = prinntl("Ammonite")
-//          |          ^""".stripMargin
-//    )
-//
-//    'compilationErrorInClass - checkErrorMessage(
-//      file = 'lineNumbers/"compilationErrorInClass.sc",
-//      expected = "compilationErrorInClass.sc:17: value a is not a member of"
-//    )
-//
-//    'CompilationErrorLineNumberTest - checkErrorMessage(
-//      file = 'lineNumbers/"CompilationErrorLineNumberTest.sc",
-//      expected =
-//        """CompilationErrorLineNumberTest.sc:7: not found: value noSuchObject
-//          |  val x = noSuchObject.badFunction
-//          |          ^""".stripMargin
-//    )
-//
-//    'RuntimeCompilationErrorLineNumberTest - checkErrorMessage(
-//      file = 'lineNumbers/"RuntimeCompilationErrorLineNumberTest.sc",
-//      expected = "(RuntimeCompilationErrorLineNumberTest.sc:6)"
-//    )
+    'compilationErrorInFourthBlock - checkErrorMessage(
+      file = 'lineNumbers/"compilationErrorInFourthBlock.sc",
+      expected =
+        """compilationErrorInFourthBlock.sc:30: not found: value prinntl
+          |val res = prinntl("Ammonite")
+          |          ^""".stripMargin
+    )
+
+    'compilationErrorInClass - checkErrorMessage(
+      file = 'lineNumbers/"compilationErrorInClass.sc",
+      expected = "compilationErrorInClass.sc:17: value a is not a member of"
+    )
+
+    'CompilationErrorLineNumberTest - checkErrorMessage(
+      file = 'lineNumbers/"CompilationErrorLineNumberTest.sc",
+      expected =
+        """CompilationErrorLineNumberTest.sc:7: not found: value noSuchObject
+          |  val x = noSuchObject.badFunction
+          |          ^""".stripMargin
+    )
+
+    'RuntimeCompilationErrorLineNumberTest - checkErrorMessage(
+      file = 'lineNumbers/"RuntimeCompilationErrorLineNumberTest.sc",
+      expected = "(RuntimeCompilationErrorLineNumberTest.sc:6)"
+    )
   }
 }

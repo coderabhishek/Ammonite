@@ -68,7 +68,6 @@ object Preprocessor{
 
         // comment holds comments or empty lines above the code which is not caught along with code
         for( (comment, code) <- s.value){
-          println("====" + comment + "====")
           val ncomment = comment + System.lineSeparator()*offset
 
           // 1 is added as Separator parser eats up the newLine char following @
