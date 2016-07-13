@@ -12,10 +12,11 @@ object ProjectTests extends TestSuite{
     val check = new TestRepl()
     'load{
       'ivy{
-        'standalone - if(windowsPlatform){
-          retry(3){ // ivy or maven central are flaky =/
-          val tq = "\"\"\""
-            check.session(s"""
+        'standalone - {
+          if(windowsPlatform){
+            retry(3){ // ivy or maven central are flaky =/
+            val tq = "\"\"\""
+              check.session(s"""
             @ import scalatags.Text.all._
             error: not found: value scalatags
 
@@ -29,6 +30,7 @@ object ProjectTests extends TestSuite{
             <a href="www.google.com">omg</a>
             $tq
           """)
+            }
           }
         }
         'akkahttp{
@@ -66,9 +68,10 @@ object ProjectTests extends TestSuite{
              """)
           }
         }
-        'resolvers - if(windowsPlatform){
-          retry(2){// ivy flakyness...
-            check.session("""
+        'resolvers - {
+          if(windowsPlatform){
+            retry(2){// ivy flakyness...
+              check.session("""
             @ import $ivy.`com.ambiata::mundane:1.2.1-20141230225616-50fc792`
             error: IvyResolutionException
 
@@ -86,7 +89,8 @@ object ProjectTests extends TestSuite{
             @ import $ivy.`com.ambiata::mundane:1.2.1-20141230225616-50fc792`
 
             @ import com.ambiata.mundane._
-                          """)
+                            """)
+            }
           }
         }
       }
