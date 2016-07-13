@@ -54,6 +54,8 @@ object Util{
     digest.digest()
   }
 
+  val windowsPlatform = System.getProperty("os.name").startsWith("Windows")
+
   // Type aliases for common things
 
   type CacheDetails = (String, String)

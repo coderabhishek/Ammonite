@@ -71,13 +71,19 @@ object Preprocessor{
           val ncomment = comment + System.lineSeparator()*offset
 
           // 1 is added as Separator parser eats up the newLine char following @
-          val extraOffset = System.getProperty("os.name").startsWith("Windows") match{
+          val extraOffset =  windowsPlatform match{
             case true => 0
             case false => 1
           }
-          offset = offset + (comment.split(System.lineSeparator(), -1).length - 1) + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + 1
-          println("Comment==>" + comment + "==" + (comment.split(System.lineSeparator(), -1).length - 1) + "======code==>" + code + "==" + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + "=========\noffset==>" + offset)
-          blocks.append((ncomment, code))
+
+          val ncode = windowsPlatform match{
+            case true => if(!blocks.empty) code.substring(1) else code
+            case false => code
+          }
+
+          offset = offset + (comment.split(System.lineSeparator(), -1).length - 1) + ncode.map(_.split(System.lineSeparator(), -1).length - 1).sum + 1
+          println("Comment==>" + comment + "==" + (comment.split(System.lineSeparator(), -1).length - 1) + "======code==>" + ncode + "==" + ncode.map(_.split(System.lineSeparator(), -1).length - 1).sum + "=========\noffset==>" + offset)
+          blocks.append((ncomment, ncode))
         }
 
         Res.Success(blocks)
