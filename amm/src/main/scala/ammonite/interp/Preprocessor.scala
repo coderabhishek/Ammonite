@@ -68,22 +68,19 @@ object Preprocessor{
 
         // comment holds comments or empty lines above the code which is not caught along with code
         for( (comment, code) <- s.value){
-          val ncomment = comment + System.lineSeparator()*offset
-
+          val ncomment = Util.windowsPlatform match {
+            case true => if(!blocks.isEmpty) comment.substring(1) else comment
+            case false => comment + System.lineSeparator() * offset
+          }
           // 1 is added as Separator parser eats up the newLine char following @
-          val extraOffset =  Util.windowsPlatform match{
-            case true => 0
-            case false => 1
-          }
+//          val extraOffset =  Util.windowsPlatform match{
+//            case true => 0
+//            case false => 1
+//          }
 
-          val ncode = Util.windowsPlatform match{
-            case true => if(!blocks.isEmpty) code(0).substring(1) +: code.tail else code
-            case false => code
-          }
-
-          offset = offset + (comment.split(System.lineSeparator(), -1).length - 1) + ncode.map(_.split(System.lineSeparator(), -1).length - 1).sum + 1
-          println("Comment==>" + comment + "==" + (comment.split(System.lineSeparator(), -1).length - 1) + "======code==>" + ncode + "==" + ncode.map(_.split(System.lineSeparator(), -1).length - 1).sum + "=========\noffset==>" + offset)
-          blocks.append((ncomment, ncode))
+          offset = offset + (comment.split(System.lineSeparator(), -1).length - 1) + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + 1
+          println("Comment==>" + comment + "==" + (comment.split(System.lineSeparator(), -1).length - 1) + "======code==>" + code + "==" + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + "=========\noffset==>" + offset)
+          blocks.append((ncomment, code))
         }
 
         Res.Success(blocks)
