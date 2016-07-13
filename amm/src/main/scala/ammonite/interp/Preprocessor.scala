@@ -75,7 +75,8 @@ object Preprocessor{
             case true => 0
             case false => 1
           }
-            offset = offset + (comment.split(System.lineSeparator(), -1).length - 1) + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + extraOffset
+          offset = offset + (comment.split(System.lineSeparator(), -1).length - 1) + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + extraOffset
+          println("Comment==>" + comment + "========code==>" + code + "===========\noffset==>" + offset)
           blocks.append((ncomment, code))
         }
 
@@ -308,7 +309,6 @@ object ${indexedWrapperName.backticked}{\n""".replace("\n", System.lineSeparator
 """.replace("\n", System.lineSeparator())
 
     val importsLen = topWrapper.length
-    println("Code==>" + code + "==========importsLIne==>" + importsLen + "\nlines==>" + (topWrapper.split(System.lineSeparator(), -1).length - 1).toString)
     (topWrapper + code + bottomWrapper, importsLen)
   }
 }
