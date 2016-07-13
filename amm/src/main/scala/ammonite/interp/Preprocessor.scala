@@ -76,7 +76,7 @@ object Preprocessor{
             case false => 1
           }
           offset = offset + (comment.split(System.lineSeparator(), -1).length - 1) + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + extraOffset
-          println("Comment==>" + comment + "========code==>" + code + "===========\noffset==>" + offset)
+          println("Comment==>" + comment + "==" + (comment.split(System.lineSeparator(), -1).length - 1) + "======code==>" + code + "==" + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + "=========\noffset==>" + offset)
           blocks.append((ncomment, code))
         }
 
