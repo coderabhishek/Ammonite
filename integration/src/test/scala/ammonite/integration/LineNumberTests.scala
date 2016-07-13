@@ -68,13 +68,13 @@ object LineNumberTests extends TestSuite{
 //          |    quicort(unsorted.filter(_ < pivot)):::List(pivot):::""".stripMargin
 //    )
 //
-//    'compilationErrorInSecondBlock - checkErrorMessage(
-//      file = 'lineNumbers/"compilationErrorInSecondBlock.sc",
-//      expected =
-//        """compilationErrorInSecondBlock.sc:14: not found: value printnl
-//          |val res_0 = printnl("OK")
-//          |            ^""".stripMargin
-//    )
+    'compilationErrorInSecondBlock - checkErrorMessage(
+      file = 'lineNumbers/"compilationErrorInSecondBlock.sc",
+      expected =
+        """compilationErrorInSecondBlock.sc:14: not found: value printnl
+          |val res_0 = printnl("OK")
+          |            ^""".stripMargin
+    )
 
     'compilationErrorInFourthBlock - checkErrorMessage(
       file = 'lineNumbers/"compilationErrorInFourthBlock.sc",
