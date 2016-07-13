@@ -72,7 +72,11 @@ object Preprocessor{
           val ncomment = comment + System.lineSeparator()*offset
 
           // 1 is added as Separator parser eats up the newLine char following @
-          offset = offset + (comment.split(System.lineSeparator(), -1).length - 1) + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + 1
+          val extraOffset = System.getProperty("os.name").startsWith("Windows") match{
+            case true => 0
+            case false => 1
+          }
+          offset = offset + (comment.split(System.lineSeparator(), -1).length - 1) + code.map(_.split(System.lineSeparator(), -1).length - 1).sum + extraOffset
           blocks.append((ncomment, code))
         }
 
