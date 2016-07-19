@@ -119,7 +119,7 @@ class SpecialClassLoader(parent: ClassLoader, parentSignature: Seq[(Path, Long)]
   }
 
   private def jarSignature(url: URL) = {
-    println("URl( jarSignature ==>" + url)
+//    println("URl( jarSignature ==>" + url)
     val path = Path(file.Paths.get(url.toURI()).toFile(), root)
     path -> path.mtime.toMillis
   }

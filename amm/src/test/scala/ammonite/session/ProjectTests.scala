@@ -14,7 +14,6 @@ object ProjectTests extends TestSuite{
     'load {
       'ivy {
         'standalone - {
-          if (!windowsPlatform) {
             retry(3) {
               // ivy or maven central are flaky =/
               val tq = "\"\"\""
@@ -34,10 +33,8 @@ object ProjectTests extends TestSuite{
             $tq
           """)
             }
-          }
         }
         'akkahttp{
-          if (!windowsPlatform) {
             check.session(
               """
               @ import $ivy.`com.typesafe.akka::akka-http-experimental:1.0-M3`
@@ -72,7 +69,6 @@ object ProjectTests extends TestSuite{
 
               @ system.shutdown()
              """)
-          }
         }
         'resolvers - {
           retry(2){
@@ -111,7 +107,6 @@ object ProjectTests extends TestSuite{
 
     'shapeless {
       // Shapeless 2.1.0 isn't published for scala 2.10
-      if (!windowsPlatform) {
         if (!scala2_10) check.session("""
           @ import $ivy.`com.chuusai::shapeless:2.2.5`, shapeless._
 
@@ -126,7 +121,6 @@ object ProjectTests extends TestSuite{
           @ 2.narrow
           res4: 2 = 2
         """)
-      }
     }
 
     'scalaz{
@@ -151,7 +145,6 @@ object ProjectTests extends TestSuite{
       """)
     }
     'resources{
-      if (!windowsPlatform) {
         check.session("""
           @ import ammonite.ops._
 
@@ -164,7 +157,6 @@ object ProjectTests extends TestSuite{
 
           @ read! path // Should work now
         """)
-      }
     }
     'scalaparse{
       // For some reason this blows up in 2.11.x
@@ -187,7 +179,6 @@ object ProjectTests extends TestSuite{
 
     'finagle{
       // Prevent regressions when wildcard-importing things called `macro` or `_`
-      if (!windowsPlatform) {
         check.session("""
           @ import $ivy.`com.twitter::finagle-httpx:6.26.0`
 
@@ -230,72 +221,69 @@ object ProjectTests extends TestSuite{
 
           @ server.close()
         """)
-      }
     }
     'spire{
       // Prevent regressions when wildcard-importing things called `macro` or `_`
-      if (!windowsPlatform) {
-        if (!scala2_10) //buggy in 2.10
-          check.session(s"""
-            @ import $$ivy.`org.spire-math::spire:0.11.0`
+      if (!scala2_10) //buggy in 2.10
+        check.session(s"""
+          @ import $$ivy.`org.spire-math::spire:0.11.0`
 
-            @ import spire.implicits._
+          @ import spire.implicits._
 
-            @ import spire.math._
+          @ import spire.math._
 
-            @ def euclidGcd[A: Integral](x: A, y: A): A = {
-            @   if (y == 0) x
-            @   else euclidGcd(y, x % y)
-            @ }
+          @ def euclidGcd[A: Integral](x: A, y: A): A = {
+          @   if (y == 0) x
+          @   else euclidGcd(y, x % y)
+          @ }
 
-            @ euclidGcd(42, 96)
-            res4: Int = 6
+          @ euclidGcd(42, 96)
+          res4: Int = 6
 
-            @ euclidGcd(42L, 96L)
-            res5: Long = 6L
+          @ euclidGcd(42L, 96L)
+          res5: Long = 6L
 
-            @ euclidGcd(BigInt(42), BigInt(96))
-            res6: BigInt = 6
+          @ euclidGcd(BigInt(42), BigInt(96))
+          res6: BigInt = 6
 
-            @ def mean[A: Fractional](xs: A*): A = xs.reduceLeft(_ + _) / xs.size
+          @ def mean[A: Fractional](xs: A*): A = xs.reduceLeft(_ + _) / xs.size
 
-            @ mean(0.5, 1.5, 0.0, -0.5)
-            res8: Double = 0.375
+          @ mean(0.5, 1.5, 0.0, -0.5)
+          res8: Double = 0.375
 
-            @ Interval(0, 10)
-            res9: Interval[Int] = [0, 10]
-          """)
-        else
-          check.session(s"""
-            @ import $$ivy.`org.spire-math::spire:0.11.0`
+          @ Interval(0, 10)
+          res9: Interval[Int] = [0, 10]
+        """)
+      else
+        check.session(s"""
+          @ import $$ivy.`org.spire-math::spire:0.11.0`
 
-            @ import spire.implicits._
+          @ import spire.implicits._
 
-            @ import spire.math._
+          @ import spire.math._
 
-            @ def euclidGcd[A: Integral](x: A, y: A): A = {
-            @   if (y == 0) x
-            @   else euclidGcd(y, x % y)
-            @ }
+          @ def euclidGcd[A: Integral](x: A, y: A): A = {
+          @   if (y == 0) x
+          @   else euclidGcd(y, x % y)
+          @ }
 
-            @ euclidGcd(42, 96)
-            res4: Int = 6
+          @ euclidGcd(42, 96)
+          res4: Int = 6
 
-            @ euclidGcd(42L, 96L)
-            res5: Long = 6L
+          @ euclidGcd(42L, 96L)
+          res5: Long = 6L
 
-            @ euclidGcd(BigInt(42), BigInt(96))
-            res6: math.BigInt = 6
+          @ euclidGcd(BigInt(42), BigInt(96))
+          res6: math.BigInt = 6
 
-            @ def mean[A: Fractional](xs: A*): A = xs.reduceLeft(_ + _) / xs.size
+          @ def mean[A: Fractional](xs: A*): A = xs.reduceLeft(_ + _) / xs.size
 
-            @ mean(0.5, 1.5, 0.0, -0.5)
-            res8: Double = 0.375
+          @ mean(0.5, 1.5, 0.0, -0.5)
+          res8: Double = 0.375
 
-            @ Interval(0, 10)
-            res9: spire.math.Interval[Int] = [0, 10]
-          """)
-      }
+          @ Interval(0, 10)
+          res9: spire.math.Interval[Int] = [0, 10]
+        """)
 
       // This fella is misbehaving but I can't figure out why :/
       //
