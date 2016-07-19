@@ -71,7 +71,6 @@ object ImportHookTests extends TestSuite{
       }
       'ivy{
         'basic - {
-//          if(true){
             check.session("""
               @ import scalatags.Text.all._
               error: not found: value scalatags
@@ -83,11 +82,9 @@ object ImportHookTests extends TestSuite{
               @ div("Hello").render
               res2: String = "<div>Hello</div>"
              """)
-//          }
         }
 
         'explicitBinaryVersion - {
-          if(true){
             check.session(s"""
               @ import scalatags.Text.all._
               error: not found: value scalatags
@@ -99,11 +96,9 @@ object ImportHookTests extends TestSuite{
               @ div("Hello").render
               res2: String = "<div>Hello</div>"
              """)
-          }
         }
 
         'inline - {
-//          if(true){
             check.session("""
               @ import scalatags.Text.all._
               error: not found: value scalatags
@@ -113,7 +108,6 @@ object ImportHookTests extends TestSuite{
               @ div("Hello").render
               res1: String = "<div>Hello</div>"
              """)
-//          }
         }
       }
       'url{
@@ -122,7 +116,7 @@ object ImportHookTests extends TestSuite{
           "master/amm/src/test/resources/scripts/Annotation.sc"
         //has some problem with path on windows most prolly windows can't handle `$` in path
         'basic - {
-          if (true) {
+          if (!Util.windowsPlatform) {
             check.session(s"""
             @ import $$url.`$scriptUrl`
             error: $$url import failed
@@ -135,7 +129,7 @@ object ImportHookTests extends TestSuite{
           }
         }
         'inline - {
-          if (true) {
+          if (!Util.windowsPlatform) {
             check.session(s"""
             @ import $$url.`$scriptUrl`
             error: $$url import failed
@@ -165,14 +159,12 @@ object ImportHookTests extends TestSuite{
        """)
 
       'ivy - {
-        if(true){
           check.session("""
             @ import $file.amm.src.test.resources.importHooks.IvyImport
 
             @ IvyImport.rendered
             res1: String = "<div>Moo</div>"
            """)
-        }
       }
 
       'deepImport - check.session("""

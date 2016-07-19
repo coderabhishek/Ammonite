@@ -75,29 +75,27 @@ object ProjectTests extends TestSuite{
           }
         }
         'resolvers - {
-          if(!windowsPlatform){
-            retry(2){
-              // ivy flakyness...
-              check.session("""
-                @ import $ivy.`com.ambiata::mundane:1.2.1-20141230225616-50fc792`
-                error: IvyResolutionException
+          retry(2){
+            // ivy flakyness...
+            check.session("""
+              @ import $ivy.`com.ambiata::mundane:1.2.1-20141230225616-50fc792`
+              error: IvyResolutionException
 
-                @ import ammonite._, Resolvers._
+              @ import ammonite._, Resolvers._
 
-                @ val oss = Resolver.Http(
-                @   "ambiata-oss",
-                @   "https://ambiata-oss.s3-ap-southeast-2.amazonaws.com",
-                @   IvyPattern,
-                @   false
-                @ )
+              @ val oss = Resolver.Http(
+              @   "ambiata-oss",
+              @   "https://ambiata-oss.s3-ap-southeast-2.amazonaws.com",
+              @   IvyPattern,
+              @   false
+              @ )
 
-                @ resolvers() = resolvers() :+ oss
+              @ resolvers() = resolvers() :+ oss
 
-                @ import $ivy.`com.ambiata::mundane:1.2.1-20141230225616-50fc792`
+              @ import $ivy.`com.ambiata::mundane:1.2.1-20141230225616-50fc792`
 
-                @ import com.ambiata.mundane._
-              """)
-            }
+              @ import com.ambiata.mundane._
+            """)
           }
         }
       }
@@ -132,29 +130,25 @@ object ProjectTests extends TestSuite{
     }
 
     'scalaz{
-      if(!windowsPlatform) {
-        check.session("""
-          @ import $ivy.`org.scalaz::scalaz-core:7.1.1`, scalaz._, Scalaz._
+      check.session("""
+        @ import $ivy.`org.scalaz::scalaz-core:7.1.1`, scalaz._, Scalaz._
 
-          @ (Option(1) |@| Option(2))(_ + _)
-          res1: Option[Int] = Some(3)
-        """)
-      }
+        @ (Option(1) |@| Option(2))(_ + _)
+        res1: Option[Int] = Some(3)
+      """)
     }
     'guava{
-      if(!windowsPlatform){
-        check.session("""
-          @ import $ivy.`com.google.guava:guava:18.0`, com.google.common.collect._
+      check.session("""
+        @ import $ivy.`com.google.guava:guava:18.0`, com.google.common.collect._
 
-          @ val bimap = ImmutableBiMap.of(1, "one", 2, "two", 3, "three")
+        @ val bimap = ImmutableBiMap.of(1, "one", 2, "two", 3, "three")
 
-          @ bimap.get(1)
-          res2: String = "one"
+        @ bimap.get(1)
+        res2: String = "one"
 
-          @ bimap.inverse.get("two")
-          res3: Int = 2
-        """)
-      }
+        @ bimap.inverse.get("two")
+        res3: Int = 2
+      """)
     }
     'resources{
       if (!windowsPlatform) {
