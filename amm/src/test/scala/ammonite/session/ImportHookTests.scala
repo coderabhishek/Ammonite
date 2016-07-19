@@ -1,20 +1,20 @@
-//package ammonite.session
-//
-//import ammonite.TestRepl
-//import ammonite.TestUtils._
-//import ammonite.tools.IvyThing
-//import utest._
-//
-//import scala.collection.{immutable => imm}
-//import scala.util.Properties
-//import ammonite.util.Util
-//
-//object ImportHookTests extends TestSuite{
-//
-//  val tests = TestSuite{
-//    println("ImportHookTests")
-//    val check = new TestRepl()
-//    'repl{
+package ammonite.session
+
+import ammonite.TestRepl
+import ammonite.TestUtils._
+import ammonite.tools.IvyThing
+import utest._
+
+import scala.collection.{immutable => imm}
+import scala.util.Properties
+import ammonite.util.Util
+
+object ImportHookTests extends TestSuite{
+
+  val tests = TestSuite{
+    println("ImportHookTests")
+    val check = new TestRepl()
+    'repl{
 //      'file{
 //        'basic - check.session("""
 //          @ import $file.amm.src.test.resources.importHooks.Basic
@@ -110,39 +110,39 @@
 //             """)
 //        }
 //      }
-//      'url{
-//        val scriptUrl =
-//          "https://raw.githubusercontent.com/lihaoyi/Ammonite/" +
-//          "master/amm/src/test/resources/scripts/Annotation.sc"
-//        //has some problem with path on windows most prolly windows can't handle `$` in path
-//        'basic - {
-//          if (!Util.windowsPlatform) {
-//            check.session(s"""
-//            @ import $$url.`$scriptUrl`
-//            error: $$url import failed
-//
-//            @ import $$url.{`$scriptUrl` => remote}
-//
-//            @ remote.product(1, List(2, 3, 4))
-//            res1: Int = 24
-//          """)
-//          }
-//        }
-//        'inline - {
-//          if (!Util.windowsPlatform) {
-//            check.session(s"""
-//            @ import $$url.`$scriptUrl`
-//            error: $$url import failed
-//
-//            @ import $$url.{`$scriptUrl` => remote}; val x = remote.product(1, List(2, 3, 4))
-//
-//            @ x
-//            res1: Int = 24
-//          """)
-//          }
-//        }
-//      }
-//    }
+      'url{
+        val scriptUrl =
+          "https://raw.githubusercontent.com/lihaoyi/Ammonite/" +
+          "master/amm/src/test/resources/scripts/Annotation.sc"
+        //has some problem with path on windows most prolly windows can't handle `$` in path
+        'basic - {
+          if (!Util.windowsPlatform) {
+            check.session(s"""
+            @ import $$url.`$scriptUrl`
+            error: $$url import failed
+
+            @ import $$url.{`$scriptUrl` => remote}
+
+            @ remote.product(1, List(2, 3, 4))
+            res1: Int = 24
+          """)
+          }
+        }
+        'inline - {
+          if (!Util.windowsPlatform) {
+            check.session(s"""
+            @ import $$url.`$scriptUrl`
+            error: $$url import failed
+
+            @ import $$url.{`$scriptUrl` => remote}; val x = remote.product(1, List(2, 3, 4))
+
+            @ x
+            res1: Int = 24
+          """)
+          }
+        }
+      }
+    }
 //    'scripts{
 //      'file - check.session("""
 //        @ import $file.amm.src.test.resources.importHooks.FileImport
@@ -177,5 +177,5 @@
 //        res1: String = "deeeep"
 //      """)
 //    }
-//  }
-//}
+  }
+}
