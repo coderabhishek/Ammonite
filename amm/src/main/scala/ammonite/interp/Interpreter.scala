@@ -610,7 +610,6 @@ class Interpreter(prompt0: Ref[String],
   }
 
   def handleEvalClasspath(jar: File) = {
-    println("AAAAAAAAAA" + jar + "AAAAAAAAAA")
     eval.sess.frames.head.addClasspath(Seq(jar))
     evalClassloader.add(jar.toURI.toURL)
   }

@@ -317,6 +317,9 @@ object ${indexedWrapperName.backticked}{\n""")
   override def toString = "${indexedWrapperName.raw}"
 }
 """)
+
+    if(topWrapper.contains("_root_.scalaz."))
+      println("=======================\n" + topWrapper + "\n====================")
     val importsLen = topWrapper.length
 
     (topWrapper + code + bottomWrapper, importsLen)
