@@ -83,7 +83,7 @@ object CachingTests extends TestSuite{
       'testLoadModule - check('scriptLevelCaching/"testLoadModule.sc")
       'testFileImport - check('scriptLevelCaching/"testFileImport.sc")
       'testIvyImport -{
-        if(!Util.windowsPlatform){
+        if(true){
           check('scriptLevelCaching/"ivyCacheTest.sc")
         }
       }
@@ -130,7 +130,7 @@ object CachingTests extends TestSuite{
       assert(n2 == 0) // all three should be cached
     }
     'tags{
-      if (!Util.windowsPlatform){
+      if (true){
         val storage = Storage.InMemory()
         val interp = createTestInterp(storage)
         interp.replApi.load.module(scriptPath/"TagBase.sc")
@@ -149,7 +149,7 @@ object CachingTests extends TestSuite{
       // to the script being run. For each change, the caches should be
       // invalidated, and subsequently a single compile should be enough
       // to re-fill the caches
-      if(!Util.windowsPlatform){
+      if(true){
         val predefFile = tmp("""
           val x = 1337
           @
