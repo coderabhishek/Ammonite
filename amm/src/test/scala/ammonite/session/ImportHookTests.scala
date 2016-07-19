@@ -116,30 +116,26 @@ object ImportHookTests extends TestSuite{
           "master/amm/src/test/resources/scripts/Annotation.sc"
         //has some problem with path on windows most prolly windows can't handle `$` in path
         'basic - {
-          if (!Util.windowsPlatform) {
-            check.session(s"""
-            @ import $$url.`$scriptUrl`
-            error: $$url import failed
+          check.session(s"""
+          @ import $$url.`$scriptUrl`
+          error: $$url import failed
 
-            @ import $$url.{`$scriptUrl` => remote}
+          @ import $$url.{`$scriptUrl` => remote}
 
-            @ remote.product(1, List(2, 3, 4))
-            res1: Int = 24
-          """)
-          }
+          @ remote.product(1, List(2, 3, 4))
+          res1: Int = 24
+        """)
         }
         'inline - {
-          if (!Util.windowsPlatform) {
-            check.session(s"""
-            @ import $$url.`$scriptUrl`
-            error: $$url import failed
+          check.session(s"""
+          @ import $$url.`$scriptUrl`
+          error: $$url import failed
 
-            @ import $$url.{`$scriptUrl` => remote}; val x = remote.product(1, List(2, 3, 4))
+          @ import $$url.{`$scriptUrl` => remote}; val x = remote.product(1, List(2, 3, 4))
 
-            @ x
-            res1: Int = 24
-          """)
-          }
+          @ x
+          res1: Int = 24
+        """)
         }
       }
     }
