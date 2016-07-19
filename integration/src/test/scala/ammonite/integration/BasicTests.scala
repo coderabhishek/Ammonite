@@ -61,12 +61,12 @@ object BasicTests extends TestSuite{
 //        }
 //      }
 //
-//      'classloaders{
+      'classloaders{
 //        if (!Util.windowsPlatform) {
-//          val evaled = exec('basic / "Resources.sc")
-//          assert(evaled.out.string.contains("1745"))
+          val evaled = exec('basic / "Resources.sc")
+          assert(evaled.out.string.contains("1745"))
 //        }
-//      }
+      }
 //
 //      'playframework- {
 //        if (!Util.windowsPlatform) {

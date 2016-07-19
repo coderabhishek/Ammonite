@@ -14,64 +14,64 @@ object ImportHookTests extends TestSuite{
   val tests = TestSuite{
     println("ImportHookTests")
     val check = new TestRepl()
-    'repl{
-      'file{
-        'basic - check.session("""
-          @ import $file.amm.src.test.resources.importHooks.Basic
-
-          @ Basic.basicValue
-          res1: Int = 31337
-        """)
-
-        'inline - check.session("""
-          @ import $file.amm.src.test.resources.importHooks.Basic, Basic.basicValue
-
-          @ basicValue
-          res1: Int = 31337
-        """)
-
-        'partiallyQualified - check.session("""
-          @ import $file.amm.src.test.resources.importHooks.Basic
-
-          @ Basic.basicValue
-          res1: Int = 31337
-        """)
-
-        'multiImport - check.session("""
-          @ import $file.amm.src.test.resources.importHooks.{Basic, BasicTwo}
-
-          @ Basic.basicValue
-          res1: Int = 31337
-
-          @ BasicTwo.basicValueTwo
-          res2: Int = 1337
-        """)
-
-        'rename - check.session("""
-          @ import $file.amm.src.test.resources.importHooks.{Basic, BasicTwo => BasicToo}
-
-          @ Basic.basicValue
-          res1: Int = 31337
-
-          @ BasicToo.basicValueTwo
-          res2: Int = 1337
-        """)
-
-        'deep - check.session("""
-          @ import $file.amm.src.test.resources.importHooks.Deep.DeepObject.DeepInner.deepValue
-          error: Cannot resolve $file import
-        """)
-
-
-        'deepRenamed - check.session("""
-          @ import $file.amm.src.test.resources.importHooks.Deep.{DeepObject => DeepRenamed}
-          error: Cannot resolve $file import
-         """)
-
-      }
+//    'repl{
+//      'file{
+//        'basic - check.session("""
+//          @ import $file.amm.src.test.resources.importHooks.Basic
+//
+//          @ Basic.basicValue
+//          res1: Int = 31337
+//        """)
+//
+//        'inline - check.session("""
+//          @ import $file.amm.src.test.resources.importHooks.Basic, Basic.basicValue
+//
+//          @ basicValue
+//          res1: Int = 31337
+//        """)
+//
+//        'partiallyQualified - check.session("""
+//          @ import $file.amm.src.test.resources.importHooks.Basic
+//
+//          @ Basic.basicValue
+//          res1: Int = 31337
+//        """)
+//
+//        'multiImport - check.session("""
+//          @ import $file.amm.src.test.resources.importHooks.{Basic, BasicTwo}
+//
+//          @ Basic.basicValue
+//          res1: Int = 31337
+//
+//          @ BasicTwo.basicValueTwo
+//          res2: Int = 1337
+//        """)
+//
+//        'rename - check.session("""
+//          @ import $file.amm.src.test.resources.importHooks.{Basic, BasicTwo => BasicToo}
+//
+//          @ Basic.basicValue
+//          res1: Int = 31337
+//
+//          @ BasicToo.basicValueTwo
+//          res2: Int = 1337
+//        """)
+//
+//        'deep - check.session("""
+//          @ import $file.amm.src.test.resources.importHooks.Deep.DeepObject.DeepInner.deepValue
+//          error: Cannot resolve $file import
+//        """)
+//
+//
+//        'deepRenamed - check.session("""
+//          @ import $file.amm.src.test.resources.importHooks.Deep.{DeepObject => DeepRenamed}
+//          error: Cannot resolve $file import
+//         """)
+//
+//      }
       'ivy{
         'basic - {
-          if(!Util.windowsPlatform){
+//          if(!Util.windowsPlatform){
             check.session("""
               @ import scalatags.Text.all._
               error: not found: value scalatags
@@ -83,27 +83,27 @@ object ImportHookTests extends TestSuite{
               @ div("Hello").render
               res2: String = "<div>Hello</div>"
              """)
-          }
+//          }
         }
-
-        'explicitBinaryVersion - {
-          if(!Util.windowsPlatform){
-            check.session(s"""
-              @ import scalatags.Text.all._
-              error: not found: value scalatags
-
-              @ import $$ivy.`com.lihaoyi:scalatags_${IvyThing.scalaBinaryVersion}:0.5.3`
-
-              @ import scalatags.Text.all._
-
-              @ div("Hello").render
-              res2: String = "<div>Hello</div>"
-             """)
-          }
-        }
+//
+//        'explicitBinaryVersion - {
+//          if(!Util.windowsPlatform){
+//            check.session(s"""
+//              @ import scalatags.Text.all._
+//              error: not found: value scalatags
+//
+//              @ import $$ivy.`com.lihaoyi:scalatags_${IvyThing.scalaBinaryVersion}:0.5.3`
+//
+//              @ import scalatags.Text.all._
+//
+//              @ div("Hello").render
+//              res2: String = "<div>Hello</div>"
+//             """)
+//          }
+//        }
 
         'inline - {
-          if(!Util.windowsPlatform){
+//          if(!Util.windowsPlatform){
             check.session("""
               @ import scalatags.Text.all._
               error: not found: value scalatags
@@ -113,7 +113,7 @@ object ImportHookTests extends TestSuite{
               @ div("Hello").render
               res1: String = "<div>Hello</div>"
              """)
-          }
+//          }
         }
       }
       'url{
@@ -122,7 +122,7 @@ object ImportHookTests extends TestSuite{
           "master/amm/src/test/resources/scripts/Annotation.sc"
         //has some problem with path on windows most prolly windows can't handle `$` in path
         'basic - {
-          if (!Util.windowsPlatform) {
+//          if (!Util.windowsPlatform) {
             check.session(s"""
             @ import $$url.`$scriptUrl`
             error: $$url import failed
@@ -132,7 +132,7 @@ object ImportHookTests extends TestSuite{
             @ remote.product(1, List(2, 3, 4))
             res1: Int = 24
           """)
-          }
+//          }
         }
         'inline - {
           if (!Util.windowsPlatform) {
@@ -148,42 +148,42 @@ object ImportHookTests extends TestSuite{
           }
         }
       }
-    }
-    'scripts{
-      'file - check.session("""
-        @ import $file.amm.src.test.resources.importHooks.FileImport
-
-        @ FileImport.fileImportVal
-        res1: Int = 31338
-       """)
-
-      'indirectFile - check.session("""
-        @ import $file.amm.src.test.resources.importHooks.IndirectFileImport
-
-        @ IndirectFileImport.indirectFileImportVal
-        res1: Int = 31339
-       """)
-
-      'ivy - {
-        if(!Util.windowsPlatform){
-          check.session("""
-            @ import $file.amm.src.test.resources.importHooks.IvyImport
-
-            @ IvyImport.rendered
-            res1: String = "<div>Moo</div>"
-           """)
-        }
-      }
-
-      'deepImport - check.session("""
-        @ import $file.amm.src.test.resources.importHooks.DeepImport.deepValueImported
-        error: Cannot resolve $file import
-
-        @ import $file.amm.src.test.resources.importHooks.DeepImport,DeepImport.deepValueImported
-
-        @ deepValueImported
-        res1: String = "deeeep"
-      """)
-    }
+//    }
+//    'scripts{
+//      'file - check.session("""
+//        @ import $file.amm.src.test.resources.importHooks.FileImport
+//
+//        @ FileImport.fileImportVal
+//        res1: Int = 31338
+//       """)
+//
+//      'indirectFile - check.session("""
+//        @ import $file.amm.src.test.resources.importHooks.IndirectFileImport
+//
+//        @ IndirectFileImport.indirectFileImportVal
+//        res1: Int = 31339
+//       """)
+//
+//      'ivy - {
+//        if(!Util.windowsPlatform){
+//          check.session("""
+//            @ import $file.amm.src.test.resources.importHooks.IvyImport
+//
+//            @ IvyImport.rendered
+//            res1: String = "<div>Moo</div>"
+//           """)
+//        }
+//      }
+//
+//      'deepImport - check.session("""
+//        @ import $file.amm.src.test.resources.importHooks.DeepImport.deepValueImported
+//        error: Cannot resolve $file import
+//
+//        @ import $file.amm.src.test.resources.importHooks.DeepImport,DeepImport.deepValueImported
+//
+//        @ deepValueImported
+//        res1: String = "deeeep"
+//      """)
+//    }
   }
 }

@@ -28,7 +28,7 @@ class Frame(val classloader: SpecialClassLoader,
     imports0 = imports0 ++ additional
   }
   def addClasspath(additional: Seq[java.io.File]) = {
-    println("Additional(addClasspath) ==>" + additional)
+//    println("Additional(addClasspath) ==>" + additional)
     additional.map(_.toURL).foreach(classloader.add)
     classpath0 = classpath0 ++ additional
   }
