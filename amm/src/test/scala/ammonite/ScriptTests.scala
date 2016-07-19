@@ -21,7 +21,7 @@ object ScriptTests extends TestSuite{
     'exec{
       'compilationBlocks{
         'loadIvy - retry(3){ // ivy or maven central seems to be flaky =/ =/ =/
-            if(!Util.windowsPlatform){
+            if(true){
               check.session(s"""
                 @ import ammonite.ops._
 
@@ -162,7 +162,7 @@ object ScriptTests extends TestSuite{
     'module{
       'compilationBlocks{
         'loadIvy{
-          if(!Util.windowsPlatform){
+          if(true){
             check.session(s"""
               @ import ammonite.ops._
 

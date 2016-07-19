@@ -241,7 +241,7 @@ object AdvancedTests extends TestSuite{
       """)
     }
     'compilerPlugin{
-      if(!Util.windowsPlatform){
+      if(true){
         check.session("""
           @ // Make sure plugins from eval class loader are not loaded
 
