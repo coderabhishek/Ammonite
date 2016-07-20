@@ -286,7 +286,6 @@ object Preprocessor{
     // Stringify everything
 
     val out = for(group <- grouped) yield {
-      println("11111111111111\n" + group)
       val printedGroup = for(item <- group) yield{
         if (item.fromName == item.toName) item.fromName.backticked
         else s"${item.fromName.backticked} => ${item.toName.backticked}"
@@ -306,7 +305,6 @@ object Preprocessor{
                code: String,
                printCode: String,
                imports: Imports) = {
-
     //we need to normalize topWrapper and bottomWrapper in order to ensure
     //the snippets always use the platform-specific newLine
     val topWrapper = normalizeNewlines(s"""
