@@ -284,17 +284,19 @@ object Preprocessor{
       }
     }
     // Stringify everything
+
     val out = for(group <- grouped) yield {
+      println("11111111111111\n" + group)
       val printedGroup = for(item <- group) yield{
         if (item.fromName == item.toName) item.fromName.backticked
         else s"${item.fromName.backticked} => ${item.toName.backticked}"
       }
+
       val pkgString = group.head.prefix.map(_.backticked).mkString(".")
       "import " + pkgString + s".{${newLine}  " +
         printedGroup.mkString(s",${newLine}  ") + s"${newLine}}${newLine}"
     }
     val res = out.mkString
-
 
     res
   }
@@ -318,8 +320,8 @@ object ${indexedWrapperName.backticked}{\n""")
 }
 """)
 
-    if(topWrapper.contains("_root_.scalaz."))
-      println("=======================\n" + topWrapper + "\n====================")
+//    if(topWrapper.contains("_root_.scalaz."))
+//      println("=======================\n" + topWrapper + "\n====================")
     val importsLen = topWrapper.length
 
     (topWrapper + code + bottomWrapper, importsLen)

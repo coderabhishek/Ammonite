@@ -114,7 +114,6 @@ object ImportHookTests extends TestSuite{
         val scriptUrl =
           "https://raw.githubusercontent.com/lihaoyi/Ammonite/" +
           "master/amm/src/test/resources/scripts/Annotation.sc"
-        //has some problem with path on windows most prolly windows can't handle `$` in path
         'basic - {
           check.session(s"""
           @ import $$url.`$scriptUrl`
