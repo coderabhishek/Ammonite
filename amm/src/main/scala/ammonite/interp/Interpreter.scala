@@ -232,7 +232,6 @@ class Interpreter(prompt0: Ref[String],
         ImportHook.Source.File(wd/"<console>"),
         stmts
       )
-    _ = println("IMports ==> " + eval.sess.frames.head.imports)
       processed <- preprocess.transform(
         hookedStmts,
         eval.getCurrentLine,
