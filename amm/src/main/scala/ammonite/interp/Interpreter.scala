@@ -232,6 +232,7 @@ class Interpreter(prompt0: Ref[String],
         ImportHook.Source.File(wd/"<console>"),
         stmts
       )
+    _ = println("IMports ==> " + eval.sess.frames.head.imports)
       processed <- preprocess.transform(
         hookedStmts,
         eval.getCurrentLine,
@@ -506,7 +507,6 @@ class Interpreter(prompt0: Ref[String],
         // pretty printing results is disabled for scripts
         val indexedWrapperName = Interpreter.indexWrapperName(wrapperName, wrapperIndex)
         val (leadingSpaces, stmts) = blocks.head
-        println("############################" + scriptImports + "##############")
         val res = for{
           processed <- preprocess.transform(
             stmts,
