@@ -82,6 +82,8 @@ class Repl(input: InputStream,
 
   def run(): Any = {
     welcomeBanner.foreach(printStream.println)
+    println("⊤")
+    "⊤T".getBytes("UTF-8").map{println}
     interp.init()
     @tailrec def loop(): Any = {
       val actionResult = action()

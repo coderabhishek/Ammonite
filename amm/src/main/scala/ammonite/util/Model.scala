@@ -121,8 +121,6 @@ case class Name(raw: String){
   override def toString = s"Name($backticked)"
   def encoded = NameTransformer.encode(raw)
   def backticked = {
-    if(!raw.contains("root"))
-    println("##" + raw)
     Name.backtickWrap(raw)
   }
 }
