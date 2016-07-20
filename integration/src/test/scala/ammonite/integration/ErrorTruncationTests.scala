@@ -20,7 +20,7 @@ object ErrorTruncationTests extends TestSuite{
     ).plainText
     println(e + "\n||||||||||||\n" + expected)
     println(e.map(_.toInt) + "\n###########\n" + expected.map(_.toInt))
-    assert(e == expected)
+    assert(e.contains(expected))
   }
   val tests = TestSuite {
 
