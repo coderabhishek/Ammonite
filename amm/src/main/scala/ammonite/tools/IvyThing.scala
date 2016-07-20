@@ -116,7 +116,6 @@ object IvyThing {
         }
       }
 
-
       // add maven repo resolver
       val chainResolver = new ChainResolver
       chainResolver.setName("chain-resolver")

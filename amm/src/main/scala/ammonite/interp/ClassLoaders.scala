@@ -28,7 +28,6 @@ class Frame(val classloader: SpecialClassLoader,
     imports0 = imports0 ++ additional
   }
   def addClasspath(additional: Seq[java.io.File]) = {
-//    println("Additional(addClasspath) ==>" + additional)
     additional.map(_.toURL).foreach(classloader.add)
     classpath0 = classpath0 ++ additional
   }
@@ -119,7 +118,6 @@ class SpecialClassLoader(parent: ClassLoader, parentSignature: Seq[(Path, Long)]
   }
 
   private def jarSignature(url: URL) = {
-//    println("URl( jarSignature ==>" + url)
     val path = Path(file.Paths.get(url.toURI()).toFile(), root)
     path -> path.mtime.toMillis
   }

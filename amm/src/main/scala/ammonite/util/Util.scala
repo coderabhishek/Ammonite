@@ -72,12 +72,6 @@ object Util{
      .replace("=", "$eq")
      .replace(",", "$comma")
 
-
-
-
-
-
-
   val windowsPlatform = System.getProperty("os.name").startsWith("Windows")
   val newLine = System.lineSeparator()
   // Type aliases for common things

@@ -284,18 +284,17 @@ object Preprocessor{
       }
     }
     // Stringify everything
-
     val out = for(group <- grouped) yield {
       val printedGroup = for(item <- group) yield{
         if (item.fromName == item.toName) item.fromName.backticked
         else s"${item.fromName.backticked} => ${item.toName.backticked}"
       }
-
       val pkgString = group.head.prefix.map(_.backticked).mkString(".")
       "import " + pkgString + s".{${newLine}  " +
         printedGroup.mkString(s",${newLine}  ") + s"${newLine}}${newLine}"
     }
     val res = out.mkString
+
 
     res
   }
@@ -305,6 +304,7 @@ object Preprocessor{
                code: String,
                printCode: String,
                imports: Imports) = {
+
     //we need to normalize topWrapper and bottomWrapper in order to ensure
     //the snippets always use the platform-specific newLine
     val topWrapper = normalizeNewlines(s"""
@@ -317,9 +317,6 @@ object ${indexedWrapperName.backticked}{\n""")
   override def toString = "${indexedWrapperName.raw}"
 }
 """)
-
-//    if(topWrapper.contains("_root_.scalaz."))
-//      println("=======================\n" + topWrapper + "\n====================")
     val importsLen = topWrapper.length
 
     (topWrapper + code + bottomWrapper, importsLen)

@@ -120,9 +120,7 @@ case class Name(raw: String){
   assert(raw.charAt(0) != '`', "Cannot create already-backticked identifiers")
   override def toString = s"Name($backticked)"
   def encoded = NameTransformer.encode(raw)
-  def backticked = {
-    Name.backtickWrap(raw)
-  }
+  def backticked = Name.backtickWrap(raw)
 }
 
 object Name{
