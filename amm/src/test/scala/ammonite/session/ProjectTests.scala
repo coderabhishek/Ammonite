@@ -35,40 +35,40 @@ object ProjectTests extends TestSuite{
           }
         }
         'akkahttp{
-          check.session(
-            """
-            @ import $ivy.`com.typesafe.akka::akka-http-experimental:1.0-M3`
+            check.session(
+              """
+              @ import $ivy.`com.typesafe.akka::akka-http-experimental:1.0-M3`
 
-            @ implicit val system = akka.actor.ActorSystem()
+              @ implicit val system = akka.actor.ActorSystem()
 
-            @ val akkaSystem = akka.http.Http(system)
+              @ val akkaSystem = akka.http.Http(system)
 
-            @ val serverBinding = akkaSystem.bind(interface = "localhost", port = 31337)
+              @ val serverBinding = akkaSystem.bind(interface = "localhost", port = 31337)
 
-            @ implicit val materializer = akka.stream.ActorFlowMaterializer()
+              @ implicit val materializer = akka.stream.ActorFlowMaterializer()
 
-            @ var set = false
+              @ var set = false
 
-            @ serverBinding.connections.runForeach { connection =>
-            @   set = true
-            @ }
+              @ serverBinding.connections.runForeach { connection =>
+              @   set = true
+              @ }
 
-            @ set
-            res7: Boolean = false
+              @ set
+              res7: Boolean = false
 
-            @ akka.stream.scaladsl.Source(
-            @   List(akka.http.model.HttpRequest(uri="/"))
-            @ ).via(
-            @   akka.http.Http().outgoingConnection("localhost", port=31337).flow
-            @ ).runForeach(println)
+              @ akka.stream.scaladsl.Source(
+              @   List(akka.http.model.HttpRequest(uri="/"))
+              @ ).via(
+              @   akka.http.Http().outgoingConnection("localhost", port=31337).flow
+              @ ).runForeach(println)
 
-            @ Thread.sleep(200)
+              @ Thread.sleep(200)
 
-            @ set
-            res10: Boolean = true
+              @ set
+              res10: Boolean = true
 
-            @ system.shutdown()
-           """)
+              @ system.shutdown()
+             """)
         }
         'resolvers - {
           retry(2){
