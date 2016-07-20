@@ -4,7 +4,7 @@ import acyclic.file
 import ammonite.ops._
 import ammonite.util.Parsers.ImportTree
 import ammonite.util.{Imports, Parsers, StableRef, Timer}
-import ammonite.util.Util.{CacheOutput, ClassFiles, CompileCache, IvyMap, newLine}
+import ammonite.util.Util.{CacheOutput, ClassFiles, CompileCache, IvyMap, newLine, sanitizePath}
 import org.apache.ivy.plugins.resolver.RepositoryResolver
 
 import scala.util.Try
@@ -125,7 +125,7 @@ object Storage{
 
     def compileCacheSave(path: String, tag: String, data: CompileCache): Unit = timer{
       val (classFiles, imports) = data
-      val tagCacheDir = compileCacheDir/path.replace("/", "$div").replace(":", "$colon")/tag
+      val tagCacheDir = compileCacheDir/sanitizePath(path)/tag
 
       if(!exists(tagCacheDir)){
         mkdir(tagCacheDir)
@@ -144,7 +144,7 @@ object Storage{
                            imports: Imports,
                            tag: String,
                            importTreesList: Seq[ImportTree]): Unit = timer{
-      val dir = pkg.replace("/", "$div") + "." + wrapper.replace("/", "$div")
+      val dir = sanitizePath(pkg) + "." + sanitizePath(wrapper)
       val codeCacheDir = cacheDir/'scriptCaches/dir/tag
       if (!exists(codeCacheDir)){
         mkdir(codeCacheDir)
@@ -175,7 +175,7 @@ object Storage{
                            wrapper: String,
                            cacheTag: String): Option[CacheOutput] = timer{
 
-      val dir = pkg.replace("/", "$div") + "." + wrapper.replace("/", "$div")
+      val dir = sanitizePath(pkg) + "." + sanitizePath(wrapper)
       val codeCacheDir = cacheDir/'scriptCaches/dir/cacheTag
       if(!exists(codeCacheDir)) None
       else {
@@ -207,7 +207,7 @@ object Storage{
     }
 
     def compileCacheLoad(path: String, tag: String): Option[CompileCache] = timer{
-      val tagCacheDir = compileCacheDir/path.replace("/", "$div").replace(":", "$colon")/tag
+      val tagCacheDir = compileCacheDir/sanitizePath(path)/tag
       if(!exists(tagCacheDir)) None
       else for{
         (loadedTag, metadata) <- readJson[(String, Imports)](tagCacheDir/metadataFile)

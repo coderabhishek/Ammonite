@@ -58,6 +58,25 @@ object Util{
   //irrespective of the OS on which script was written
   def normalizeNewlines(s: String) = s.replace("\r", "").replace("\n", newLine)
 
+  def sanitizePath(s: String) =
+    s.replace("*", "$star")
+     .replace(".", "$dot")
+     .replace("\"", "$quote")
+     .replace("\\", "$backSlash")
+     .replace("/", "$fwdSlash")
+     .replace("[", "$openBrckt")
+     .replace("]", "$closeBrckt")
+     .replace(":", "$colon")
+     .replace(";", "$semiColon")
+     .replace("|", "$pipe")
+     .replace("=", "$eq")
+     .replace(",", "$comma")
+
+
+
+
+
+
 
   val windowsPlatform = System.getProperty("os.name").startsWith("Windows")
   val newLine = System.lineSeparator()
