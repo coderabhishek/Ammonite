@@ -18,8 +18,6 @@ object ErrorTruncationTests extends TestSuite{
     val e = fansi.Str(
       intercept[ShelloutException]{ exec(file) }.result.err.string
     ).plainText
-    println(e + "\n||||||||||||\n" + expected)
-    println(e.map(_.toInt) + "\n###########\n" + expected.map(_.toInt))
     assert(e.contains(expected))
   }
   val tests = TestSuite {
