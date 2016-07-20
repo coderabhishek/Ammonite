@@ -124,7 +124,7 @@ object ProjectTests extends TestSuite{
     }
 
     'scalaz{
-      pritnln("000000000000000000000000000000000000000")
+      println("000000000000000000000000000000000000000")
       println("⊤")
       "⊤T".getBytes("UTF-8").map{println}
       check.session("""
