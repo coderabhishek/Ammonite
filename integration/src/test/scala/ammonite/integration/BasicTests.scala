@@ -25,6 +25,21 @@ object BasicTests extends TestSuite{
       assert(evaled.out.trim == "Hello World")
     }
 
+    //make sure scripts with symbols in path names work fine
+    'scriptWithSymbols{
+      val evaled = exec('basic/"script%#.@*+叉燒.sc")
+      assert(evaled.out.trim == "Script Worked!!")
+    }
+
+    'scriptInSomeOtherDir{
+      rm(home/'bin/"script.sc")
+      write(home/'bin/"script.sc", """println("Worked!")""")
+      val evaled = %% bash(
+        executable,
+        home/'bin/"script.sc"
+        )
+      assert(evaled.out.trim == "Worked!!")
+    }
 
     'complex {
       val evaled = exec('basic / "Complex.sc")
